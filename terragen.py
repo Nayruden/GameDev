@@ -54,17 +54,14 @@ class Tile():
 		#print tile.height,scaledHeight,heightGroup
 		
 		tile.biome = BiomeGrid[wetGroup][heightGroup]
-		
-#		if (tile.height - waterLevel) < 0.2:
-#			if tile.wetness < 0.25 or (tile.height-waterLevel) < 0.01:
-#				tile.biome = Biomes.Sand
-#			else:
-#				tile.biome = Biomes.Trees
-#		else:
-#			if tile.wetness < 0.2:
-#				tile.biome = Biomes.Mountain
-#			else:
-#				tile.biome = Biomes.Dirt
+	
+	def Neighbors(tile, map):
+		for x,y in ((-1,-1),(0,-1),(1,-1),(-1,0),(1,0),(-1,1),(0,1),(1,1)):
+			nx = tile.x + x
+			ny = tile.y + y
+			if nx >= 0 and nx < map.width and ny >= 0 and ny < map.height:
+				yield map.grid[ny][nx]
+	
 
 class Map():
 	
@@ -80,6 +77,11 @@ class Map():
 		
 		self.waterLevel = self.CalcWaterLevel(waterApproach)
 		self.ClassifyBiomes(self.waterLevel)
+		
+		self.LineWaterWithSand()
+		self.CullEdge(Biomes.Trees, Biomes.Grass)
+		self.CullEdge(Biomes.Gap, Biomes.Hill)
+		self.CullEdge(Biomes.Snow, Biomes.Mountain)
 	
 	
 	def InitGrid(self, width, height):
@@ -186,4 +188,39 @@ class Map():
 					maxLevel = tile.height
 		
 		return maxLevel
+	
+	def LineWaterWithSand(map):
+		
+		for row in map.grid:
+			for tile in row:
+				
+				if tile.biome not in (Biomes.Grass, Biomes.Trees):
+					continue
+				
+				byWater = False
+				
+				for neighbor in tile.Neighbors(map):
+					if neighbor.biome == Biomes.Ocean:
+						byWater = True
+				
+				if byWater is True:
+					tile.biome = Biomes.Sand
+	
+	def CullEdge(map, centerBiome, edgeBiome):
+		
+		for row in map.grid:
+			for tile in row:
+				
+				if tile.biome != centerBiome:
+					continue
+				
+				edge = False
+				
+				for neighbor in tile.Neighbors(map):
+					if neighbor.biome not in (centerBiome, edgeBiome):
+						edge = True
+				
+				if edge:
+					tile.biome = edgeBiome
+	
 	
