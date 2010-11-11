@@ -58,7 +58,11 @@ def DrawMap(map):
 			else:
 				color = (255,0,255)
 			
-			screen.fill(color, ((tile.x*squareSize, tile.y*squareSize), (squareSize,squareSize)))
+			try:
+				screen.fill(color, ((tile.x*squareSize, tile.y*squareSize), (squareSize,squareSize)))
+			except TypeError:
+				print "bad color:", color
+				return
 		
 	
 

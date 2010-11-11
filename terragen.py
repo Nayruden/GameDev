@@ -17,7 +17,21 @@ class Biomes:
 	Snow = 8
 	
 
+BiomeGrid = [
+	#low							#high
+	[Biomes.Trees,	Biomes.Trees,	Biomes.Trees,	Biomes.Dirt,	Biomes.Gap,	Biomes.Gap,	Biomes.Snow,	Biomes.Snow	],	#wet
+	[Biomes.Trees,	Biomes.Trees,	Biomes.Trees,	Biomes.Dirt,	Biomes.Hill,	Biomes.Hill,	Biomes.Snow,	Biomes.Snow	],	
+	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Hill,	Biomes.Hill,	Biomes.Snow,	Biomes.Snow	],	
+	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Hill,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
+	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Hill,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
+	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
+	[Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
+	[Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	]	#dry
+]
+
 class Tile():
+	
+	global BiomeGrid
 	
 	def __init__(self, x, y):
 		self.x = x
@@ -32,16 +46,25 @@ class Tile():
 			tile.biome = Biomes.Ocean
 			return
 		
-		if (tile.height - waterLevel) < 0.2:
-			if tile.wetness < 0.25 or (tile.height-waterLevel) < 0.01:
-				tile.biome = Biomes.Sand
-			else:
-				tile.biome = Biomes.Trees
-		else:
-			if tile.wetness < 0.2:
-				tile.biome = Biomes.Mountain
-			else:
-				tile.biome = Biomes.Dirt
+		scaledHeight = (tile.height - waterLevel) / (1.0001-waterLevel)
+		
+		heightGroup = min(int(scaledHeight*8), 7)
+		wetGroup = min(int(tile.wetness*8), 7)
+		
+		#print tile.height,scaledHeight,heightGroup
+		
+		tile.biome = BiomeGrid[wetGroup][heightGroup]
+		
+#		if (tile.height - waterLevel) < 0.2:
+#			if tile.wetness < 0.25 or (tile.height-waterLevel) < 0.01:
+#				tile.biome = Biomes.Sand
+#			else:
+#				tile.biome = Biomes.Trees
+#		else:
+#			if tile.wetness < 0.2:
+#				tile.biome = Biomes.Mountain
+#			else:
+#				tile.biome = Biomes.Dirt
 
 class Map():
 	
