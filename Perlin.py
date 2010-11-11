@@ -1,4 +1,6 @@
 
+# Perlin noise module
+
 from random import random
 from math import sqrt, ceil
 

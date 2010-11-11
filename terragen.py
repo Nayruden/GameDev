@@ -1,4 +1,6 @@
 
+# creates randomly generated map
+
 from __future__ import division
 from random import random
 from Perlin import PerlinGrid
@@ -6,9 +8,14 @@ from Perlin import PerlinGrid
 class Biomes:
 	Ocean = 0
 	Sand = 1
-	Trees = 2
-	Dirt = 3
-	Rock = 4
+	Grass = 2
+	Trees = 3
+	Dirt = 4
+	Hill = 5
+	Gap = 6
+	Mountain = 7
+	Snow = 8
+	
 
 class Tile():
 	
@@ -32,7 +39,7 @@ class Tile():
 				tile.biome = Biomes.Trees
 		else:
 			if tile.wetness < 0.2:
-				tile.biome = Biomes.Rock
+				tile.biome = Biomes.Mountain
 			else:
 				tile.biome = Biomes.Dirt
 
@@ -54,8 +61,8 @@ class Map():
 	
 	def InitGrid(self, width, height):
 		
-		perlinSpaceL = PerlinGrid(width, height, width/53, height/53)
-		perlinSpace = PerlinGrid(width, height, width/13, height/13)
+		#perlinSpaceL = PerlinGrid(width, height, width/53, height/53)
+		#perlinSpace = PerlinGrid(width, height, width/13, height/13)
 		perlinSpaceH = PerlinGrid(width, height, width/7, height/7)
 		
 		perlinSpaceRain = PerlinGrid(width, height, width/21, height/15)
@@ -127,17 +134,10 @@ class Map():
 				
 				falloff = 1-abs(2*falloff - 1)
 				
-				#tile.height = tile.height * (falloff+1.5)*2/3
-				#h = tile.height**(1-falloff)
-				
-				#h = h * falloff (falloff**2 +1)/2
-				
 				h = tile.height
 				
 				h = h*(falloff+1) + falloff
 				h = h**2
-				
-				#h = h**((1-falloff)*1.5 + 0.5)
 				
 				tile.height = h
 		
