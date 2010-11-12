@@ -20,7 +20,7 @@ class Level(object):
 		# creates a random array
 		for col in range (0,cols+1):
 			for row in range (0,rows+1):
-				terrian[col][row] = 2*random.randint(0, 1)
+				terrian[col][row] = 1*random.randint(0, 1) + 3
 		
 		"""
 		# prints my array to the console (DEBUG)
