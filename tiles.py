@@ -6,13 +6,7 @@ class Tiles(pygame.rect.Rect):
 		tsize = twidth, theight = 24, 28 #tile size
 		
 		# Tiles are named by what material they have in each corner:
-		# 0 = GRASS  can only be next to DIRT and TREE
-		# 1 = DIRT   can only be next to HILL and GRASS
-		# 2 = HILL   can only be next to DIRT and MTN
-		# 3 = MTN    can only be next to HILL
-		# 4 = EMPTY  can only be next to HILL
-		# 5 = TREE   can only be next to GRASS
-		# 9 = CLOUD  can only be OVER anything       11
+		# 
 		# ** I would use clouds as a seperate layer with some alpha
 		# So "1101" would refer to a tile like this: 01 or mostly dirt
 		# with grass in the bottom left
@@ -71,4 +65,7 @@ class Tiles(pygame.rect.Rect):
 				
 			}
 		
-		self.area = pygame.rect.Rect(self.tiles[tilecode])
+		if tilecode in self.tiles:
+			self.area = pygame.rect.Rect(self.tiles[tilecode])
+		else:
+			self.area = pygame.rect.Rect((0*twidth, 0*theight, twidth/2, theight/2))
