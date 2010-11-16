@@ -38,7 +38,7 @@ def DrawMap(map):
 		for tile in row:
 			
 			if tile.biome == Biomes.Ocean:
-				color = (0,255-(map.waterLevel-tile.height)*255,255)
+				color = (0,255,255)#(0,255-(map.waterLevel-tile.height)*255,255)
 			elif tile.biome == Biomes.Sand:
 				color = (255,255,200)
 			elif tile.biome == Biomes.Grass:
@@ -55,6 +55,8 @@ def DrawMap(map):
 				color = (128,128,128)
 			elif tile.biome == Biomes.Snow:
 				color = (255,255,255)
+			elif tile.biome == Biomes.DeepOcean:
+				color = (0,0,255)
 			else:
 				color = (255,0,255)
 			

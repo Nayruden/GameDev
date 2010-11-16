@@ -1,6 +1,7 @@
 import pygame
 import tiles
 import random
+import terragen
 
 class Level(object):
 	def __init__(self):
@@ -15,12 +16,16 @@ class Level(object):
 		self.yoffset = rows*theight - 480
 		
 		# I don't know of a better way to initialize that works
-		terrian = [[0 for row in range(rows+1)] for col in range(cols+1)]
+		terrian = []#[[0 for row in range(rows+1)] for col in range(cols+1)]
+		
+		map = terragen.Map(cols+1,rows+1,18)
 		
 		# creates a random array
 		for col in range (0,cols+1):
+			newCol = []
 			for row in range (0,rows+1):
-				terrian[col][row] = 1*random.randint(0, 1) + 3
+				newCol.append(map.grid[row][col].biome)
+			terrian.append(newCol)
 		
 		"""
 		# prints my array to the console (DEBUG)

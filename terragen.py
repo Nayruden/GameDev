@@ -6,15 +6,17 @@ from random import random
 from Perlin import PerlinGrid
 
 class Biomes:
-	Ocean = 0
-	Sand = 1
-	Grass = 2
-	Trees = 3
-	Dirt = 4
+	Ocean = 4
+	Sand = 3
+	Grass = 0
+	Trees = 2
+	Dirt = 1
 	Hill = 5
 	Gap = 6
 	Mountain = 7
 	Snow = 8
+	Lava = 9
+	DeepOcean = "A"
 	
 
 BiomeGrid = [
@@ -26,7 +28,7 @@ BiomeGrid = [
 	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Hill,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
 	[Biomes.Grass,	Biomes.Grass,	Biomes.Grass,	Biomes.Dirt,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
 	[Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	],	
-	[Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Mountain	]	#dry
+	[Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Sand,	Biomes.Dirt,	Biomes.Hill,	Biomes.Mountain,	Biomes.Lava	]	#dry
 ]
 
 class Tile():
@@ -41,6 +43,10 @@ class Tile():
 		self.biome = Biomes.Ocean
 	
 	def CalcBiome(tile, waterLevel):
+		
+		if tile.height <= waterLevel/2:
+			tile.biome = Biomes.DeepOcean
+			return
 		
 		if tile.height <= waterLevel:
 			tile.biome = Biomes.Ocean
