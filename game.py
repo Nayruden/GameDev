@@ -9,7 +9,7 @@ pygame.display.set_caption("Tyrian Defense")
 clock = pygame.time.Clock()
 
 level = level.Level()
-ship = ship.Ship((250, 355), level)
+ship = ship.Ship((250, 355), level,pygame.rect.Rect(level.rect.x,level.rect.y,level.rect.width,480))
 
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
@@ -19,7 +19,10 @@ while running:
 		if event.type == pygame.QUIT:
 			running = False
 	
-	ship.handle_event(event)
+	if not ship.handle_event(event):
+		pass #todo: handle events the ship isn't interested in
+	
+	ship.step()
 			
 	screen.fill(pygame.Color('black'))	
 	screen.blit(level.image, movedlevelrect)
