@@ -5,67 +5,113 @@ class Tiles(pygame.rect.Rect):
 	def __init__(self, tilecode):
 		tsize = twidth, theight = 24, 28 #tile size
 		
+		# STILL WORKING ON; 3-1 7-8 7-9
+		
 		# Tiles are named by what material they have in each corner:
 		# 
 		# ** I would use clouds as a seperate layer with some alpha
 		# So "1101" would refer to a tile like this: 01 or mostly dirt
 		# with grass in the bottom left
 		
-		self.tiles = {  # Grass-Dirt Transition Tiles
-				"0001":	(0*twidth, 0, twidth, theight),
-		  		"0011":	(1*twidth, 0, twidth, theight),
-				"0010":	(2*twidth, 0, twidth, theight),
-				"0000":	(3*twidth, 0, twidth, theight),
-				"0110":	(5*twidth, 0*theight, twidth, theight),	
-				"0101":	(0*twidth, 1*theight, twidth, theight),
-				"1111":	(1*twidth, 1*theight, twidth, theight),
-				"1010":	(2*twidth, 1*theight, twidth, theight),
-				"0111":	(3*twidth, 1*theight, twidth, theight),
-				"1011":	(4*twidth, 1*theight, twidth, theight),
-				"1001":	(5*twidth, 1*theight, twidth, theight),
-				"0100":	(0*twidth, 2*theight, twidth, theight),
-				"1100":	(1*twidth, 2*theight, twidth, theight),
-				"1000":	(2*twidth, 2*theight, twidth, theight),
-				"1101":	(3*twidth, 2*theight, twidth, theight),
-				"1110":	(4*twidth, 2*theight, twidth, theight),
-				# Grass-Tree Transition Tiles	
-				"0002":	(0*twidth, 3*theight, twidth, theight),
-		  		"0022":	(1*twidth, 3*theight, twidth, theight),
-				"0020":	(2*twidth, 3*theight, twidth, theight),
-				"2222":	(4*twidth, 3*theight, twidth, theight),
-				"0220":	(5*twidth, 3*theight, twidth, theight),	
-				"0202":	(0*twidth, 4*theight, twidth, theight),
-				"2222":	(1*twidth, 4*theight, twidth, theight),
-				"2020":	(2*twidth, 4*theight, twidth, theight),
-				"0222":	(3*twidth, 4*theight, twidth, theight),
-				"2022":	(4*twidth, 4*theight, twidth, theight),
-				"2002":	(5*twidth, 4*theight, twidth, theight),
-				"0200":	(0*twidth, 5*theight, twidth, theight),
-				"2200":	(1*twidth, 5*theight, twidth, theight),
-				"2000":	(2*twidth, 5*theight, twidth, theight),
-				"2202":	(3*twidth, 5*theight, twidth, theight),
-				"2220":	(4*twidth, 5*theight, twidth, theight),
-				# Sand-Water1 Tiles (sand = 3; water = 4)
-				"3334":	(0*twidth, 21*theight, twidth, theight),
-		  		"3344":	(1*twidth, 21*theight, twidth, theight),
-				"3343":	(2*twidth, 21*theight, twidth, theight),
-				"3333":	(5*twidth, 21*theight, twidth, theight),
-				"3443":	(5*twidth, 23*theight, twidth, theight),	
-				"3434":	(0*twidth, 22*theight, twidth, theight),
-				"4444":	(1*twidth, 22*theight, twidth, theight),
-				"4343":	(2*twidth, 22*theight, twidth, theight),
-				"3444":	(4*twidth, 22*theight, twidth, theight),
-				"4344":	(3*twidth, 22*theight, twidth, theight),
-				"4334":	(5*twidth, 22*theight, twidth, theight),
-				"3433":	(0*twidth, 23*theight, twidth, theight),
-				"4433":	(1*twidth, 23*theight, twidth, theight),
-				"4333":	(2*twidth, 23*theight, twidth, theight),
-				"4434":	(4*twidth, 21*theight, twidth, theight),
-				"4443":	(3*twidth, 21*theight, twidth, theight)
+		# Set 0: GRASS-DIRT (already configured)
+		# The default transition set is the part of the image that has
+		tset = 0  # conversions from grass to dirt (0-1)
+		
+		# Now I adapt the tilecodes to be part of a given transition set
+		# this means changing something like 3343 to 0010,
+		#  and saying that we are in tileset 6 (that is where the 3-4s are)
+		
+		# Set 1: TREE-GRASS set: right now 2 (tree) only happens in grass (0)
+		if "2" in tilecode: # so change those 2's to 1's for pattern matching
+			tilecode = tilecode.replace("2", "1")
+			tset = 1 # but change the transition set
+		
+		# Set 2: DIRT-HILL 
+		if "1" in tilecode: 
+			if "5" in tilecode:# and ("0" in tilecode == False):
+				tilecode = tilecode.replace("0", "G") # grass fix
+				tilecode = tilecode.replace("5", "0")
+				tset = 2
 				
+		# Set 3: HILL-MOUNTIAN
+		if "5" in tilecode:
+			if "7" in tilecode:
+				tilecode = tilecode.replace("5", "0")
+				tilecode = tilecode.replace("7", "1")
+				tset = 3
+		
+		# Set 3: MOUNTIAN-LAVA
+		if "7" in tilecode:
+			if "9" in tilecode:
+				tilecode = tilecode.replace("7", "0")
+				tilecode = tilecode.replace("9", "1")
+				tset = 4
+				
+		# Set 3: MOUNTIAN-ICE
+		if "7" in tilecode:
+			if "8" in tilecode:
+				tilecode = tilecode.replace("7", "0")
+				tilecode = tilecode.replace("8", "1")
+				tset = 4
+		
+		
+		# sets with water
+		if "4" in tilecode:
+			if "3" in tilecode: # the set for sand-water
+				tilecode = tilecode.replace("3", "0")
+				tilecode = tilecode.replace("4", "1")
+				tset = 6
+			elif "A" in tilecode: # the set for water-deepwater
+				tilecode = tilecode.replace("4", "0")
+				tilecode = tilecode.replace("A", "1")
+				tset = 8
+				
+		# Set 7: GRASS-SAND
+		if "3" in tilecode:
+			if "0" in tilecode:
+				tilecode = tilecode.replace("1", "D") # dirt fix
+				tilecode = tilecode.replace("3", "1")
+				tset = 7
+				
+		# Pure tile fix: alternatively I could hardcode them into self.tiles
+		#  or figure out my logic better so these resolve in set translation
+		if tilecode == "3333":
+			tilecode = "0000" # this covers pure sand
+			tset = 6
+		if tilecode == "4444":
+			tilecode = "1111" # this covers pure water
+			tset = 6
+		if tilecode == "5555":
+			tilecode = "0000" # this covers pure hill
+			tset = 2
+		if tilecode == "7777" in tilecode: # covers pure deepwater
+			tilecode = "1111"
+			tset = 3
+		if tilecode == "AAAA" in tilecode: # covers pure deepwater
+			tilecode = "0000"
+			tset = 8
+		
+		self.tiles = {  # Base Transition Tile Locations for a given Transition Set
+				"0001":	(0*twidth, (0+3*tset)*theight, twidth, theight),
+		  		"0011":	(1*twidth, (0+3*tset)*theight, twidth, theight),
+				"0010":	(2*twidth, (0+3*tset)*theight, twidth, theight),
+				"0000":	(3*twidth, (0+3*tset)*theight, twidth, theight),
+				"0110":	(5*twidth, (0+3*tset)*theight, twidth, theight),	
+				"0101":	(0*twidth, (1+3*tset)*theight, twidth, theight),
+				"1111":	(1*twidth, (1+3*tset)*theight, twidth, theight),
+				"1010":	(2*twidth, (1+3*tset)*theight, twidth, theight),
+				"0111":	(3*twidth, (1+3*tset)*theight, twidth, theight),
+				"1011":	(4*twidth, (1+3*tset)*theight, twidth, theight),
+				"1001":	(5*twidth, (1+3*tset)*theight, twidth, theight),
+				"0100":	(0*twidth, (2+3*tset)*theight, twidth, theight),
+				"1100":	(1*twidth, (2+3*tset)*theight, twidth, theight),
+				"1000":	(2*twidth, (2+3*tset)*theight, twidth, theight),
+				"1101":	(3*twidth, (2+3*tset)*theight, twidth, theight),
+				"1110":	(4*twidth, (2+3*tset)*theight, twidth, theight)
 			}
 		
 		if tilecode in self.tiles:
 			self.area = pygame.rect.Rect(self.tiles[tilecode])
 		else:
+			print tilecode
 			self.area = pygame.rect.Rect((0*twidth, 0*theight, twidth/2, theight/2))
