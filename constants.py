@@ -2,3 +2,7 @@
 SCREEN_WIDTH = 624
 SCREEN_HEIGHT = 480
 SCROLL_RATE = 1
+COLS = 26
+ROWS = 180
+PORT = 4141
+PROTOCOL = 2 # For Pickle. 0 is plain text.
