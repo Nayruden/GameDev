@@ -6,6 +6,7 @@ from random import random
 from Perlin import PerlinGrid
 
 class Biomes:
+	DeepOcean = "A"
 	Ocean = 4
 	Sand = 3
 	Grass = 0
@@ -16,7 +17,6 @@ class Biomes:
 	Mountain = 7
 	Snow = 8
 	Lava = 9
-	DeepOcean = "A"
 	
 
 BiomeGrid = [
@@ -84,10 +84,17 @@ class Map():
 		self.waterLevel = self.CalcWaterLevel(waterApproach)
 		self.ClassifyBiomes(self.waterLevel)
 		
-		self.LineWaterWithSand()
+		self.Enforce(Biomes.Lava, [], Biomes.Mountain)
+		self.Enforce(Biomes.Snow, [], Biomes.Mountain)
+		self.Enforce(Biomes.Mountain, [Biomes.Snow, Biomes.Lava], Biomes.Hill)
+		self.Enforce(Biomes.Hill, [Biomes.Mountain, Biomes.Gap], Biomes.Dirt)
+		self.Enforce(Biomes.Dirt, [Biomes.Hill], Biomes.Grass)
+		self.Enforce(Biomes.Grass, [Biomes.Dirt,Biomes.Trees], Biomes.Sand)
+		self.CullEdge(Biomes.DeepOcean, Biomes.Ocean)
+		self.Enforce(Biomes.Ocean, [Biomes.DeepOcean,Biomes.Sand], Biomes.Sand)
 		self.CullEdge(Biomes.Trees, Biomes.Grass)
-		self.CullEdge(Biomes.Gap, Biomes.Hill)
-		self.CullEdge(Biomes.Snow, Biomes.Mountain)
+		#self.CullEdge(Biomes.Gap, Biomes.Hill)
+		#self.CullEdge(Biomes.Snow, Biomes.Mountain)
 	
 	
 	def InitGrid(self, width, height):
@@ -195,23 +202,6 @@ class Map():
 		
 		return maxLevel
 	
-	def LineWaterWithSand(map):
-		
-		for row in map.grid:
-			for tile in row:
-				
-				if tile.biome not in (Biomes.Grass, Biomes.Trees):
-					continue
-				
-				byWater = False
-				
-				for neighbor in tile.Neighbors(map):
-					if neighbor.biome == Biomes.Ocean:
-						byWater = True
-				
-				if byWater is True:
-					tile.biome = Biomes.Sand
-	
 	def CullEdge(map, centerBiome, edgeBiome):
 		
 		for row in map.grid:
@@ -228,5 +218,20 @@ class Map():
 				
 				if edge:
 					tile.biome = edgeBiome
+	
+	def Enforce(map, checkBiome, legalEdges, changeTo):
+		
+		legal = [checkBiome]
+		legal += legalEdges
+		
+		for row in map.grid:
+			for tile in row:
+				
+				if tile.biome != checkBiome:
+					continue
+				
+				for neighbor in tile.Neighbors(map):
+					if neighbor.biome not in legal:
+						neighbor.biome = changeTo
 	
 	
