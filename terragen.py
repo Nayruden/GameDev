@@ -90,10 +90,11 @@ class Map():
 		self.Enforce(Biomes.Hill, [Biomes.Mountain, Biomes.Gap], Biomes.Dirt)
 		self.Enforce(Biomes.Dirt, [Biomes.Hill], Biomes.Grass)
 		self.Enforce(Biomes.Grass, [Biomes.Dirt,Biomes.Trees], Biomes.Sand)
+		self.Enforce(Biomes.Sand, [Biomes.Grass, Biomes.Ocean, Biomes.DeepOcean], Biomes.Sand)
 		self.CullEdge(Biomes.DeepOcean, Biomes.Ocean)
-		self.Enforce(Biomes.Ocean, [Biomes.DeepOcean,Biomes.Sand], Biomes.Sand)
+		#self.Enforce(Biomes.Ocean, [Biomes.DeepOcean,Biomes.Sand], Biomes.Sand)
 		self.CullEdge(Biomes.Trees, Biomes.Grass)
-		#self.CullEdge(Biomes.Gap, Biomes.Hill)
+		self.CullEdge(Biomes.Gap, Biomes.Hill)
 		#self.CullEdge(Biomes.Snow, Biomes.Mountain)
 	
 	
