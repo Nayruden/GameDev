@@ -87,6 +87,12 @@ class Tiles(pygame.rect.Rect):
 		if tilecode == "7777" in tilecode: # covers pure deepwater
 			tilecode = "1111"
 			tset = 3
+		if tilecode == "8888" in tilecode: # covers pure deepwater
+			tilecode = "1111"
+			tset = 4
+		if tilecode == "9999" in tilecode: # covers pure deepwater
+			tilecode = "1111"
+			tset = 4
 		if tilecode == "AAAA" in tilecode: # covers pure deepwater
 			tilecode = "0000"
 			tset = 8

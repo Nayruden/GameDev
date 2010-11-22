@@ -84,6 +84,7 @@ class Map():
 		self.waterLevel = self.CalcWaterLevel(waterApproach)
 		self.ClassifyBiomes(self.waterLevel)
 		
+		self.CullEdge(Biomes.Trees, Biomes.Grass)
 		self.Enforce(Biomes.Lava, [], Biomes.Mountain)
 		self.Enforce(Biomes.Snow, [], Biomes.Mountain)
 		self.Enforce(Biomes.Mountain, [Biomes.Snow, Biomes.Lava], Biomes.Hill)
@@ -93,7 +94,6 @@ class Map():
 		self.Enforce(Biomes.Sand, [Biomes.Grass, Biomes.Ocean, Biomes.DeepOcean], Biomes.Sand)
 		self.CullEdge(Biomes.DeepOcean, Biomes.Ocean)
 		#self.Enforce(Biomes.Ocean, [Biomes.DeepOcean,Biomes.Sand], Biomes.Sand)
-		self.CullEdge(Biomes.Trees, Biomes.Grass)
 		self.CullEdge(Biomes.Gap, Biomes.Hill)
 		#self.CullEdge(Biomes.Snow, Biomes.Mountain)
 	
