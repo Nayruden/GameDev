@@ -9,6 +9,8 @@ import network
 import pickle
 
 from pygame.rect import Rect
+from pygame import mixer
+from pygame.mixer import Sound
 
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 conn.connect((sys.argv[-1], constants.PORT))
@@ -28,11 +30,16 @@ scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
 
+pygame.mixer.init(44100,-16,16, 1024)
+background = pygame.mixer.Sound("sounds/background/background.ogg")
+background.set_volume(0.3)
+background.play()
 while running:
+	
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-
+		
 	if not theship.handle_event(event):
 		pass #todo: handle events the ship isn't interested in
 
