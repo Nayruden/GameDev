@@ -76,6 +76,10 @@ class Map():
 		self.height = height
 		self.InitGrid(width, height)
 		
+		# GREP DEBUG
+		#self.grid[140][10].height = 1
+		#self.grid[140][10].wetness = 0
+		
 		self.Normalize()
 		self.Deform()
 		self.Normalize()
@@ -84,17 +88,17 @@ class Map():
 		self.waterLevel = self.CalcWaterLevel(waterApproach)
 		self.ClassifyBiomes(self.waterLevel)
 		
-		self.CullEdge(Biomes.Trees, Biomes.Grass)
 		self.Enforce(Biomes.Lava, [], Biomes.Mountain)
 		self.Enforce(Biomes.Snow, [], Biomes.Mountain)
 		self.Enforce(Biomes.Mountain, [Biomes.Snow, Biomes.Lava], Biomes.Hill)
+		self.CullEdge(Biomes.Gap, Biomes.Hill)
 		self.Enforce(Biomes.Hill, [Biomes.Mountain, Biomes.Gap], Biomes.Dirt)
 		self.Enforce(Biomes.Dirt, [Biomes.Hill], Biomes.Grass)
+		self.CullEdge(Biomes.Trees, Biomes.Grass)
 		self.Enforce(Biomes.Grass, [Biomes.Dirt,Biomes.Trees], Biomes.Sand)
-		self.Enforce(Biomes.Sand, [Biomes.Grass, Biomes.Ocean, Biomes.DeepOcean], Biomes.Sand)
 		self.CullEdge(Biomes.DeepOcean, Biomes.Ocean)
+		self.Enforce(Biomes.Sand, [Biomes.Grass, Biomes.Ocean, Biomes.DeepOcean], Biomes.Sand)
 		#self.Enforce(Biomes.Ocean, [Biomes.DeepOcean,Biomes.Sand], Biomes.Sand)
-		self.CullEdge(Biomes.Gap, Biomes.Hill)
 		#self.CullEdge(Biomes.Snow, Biomes.Mountain)
 	
 	
@@ -120,6 +124,10 @@ class Map():
 				tile.height = noise
 				tile.wetness = (perlinSpaceRain.get(x,y)+1)/2
 				
+				# GREP DEBUG
+				#tile.height = 0
+				#tile.wetness = 1
+
 				row.append(tile)
 				
 			self.grid.append(row)
