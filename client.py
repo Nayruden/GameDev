@@ -42,15 +42,10 @@ channelExtra = pygame.mixer.find_channel() #locate chanel w/o any sound on it
 channelExtra.play(danger)
 
 while running:
-	
+
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-		
-	if not theship.handle_event(event):
-		pass #todo: handle events the ship isn't interested in
-
-	theship.step(scrollPosition)
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
@@ -59,7 +54,7 @@ while running:
 
 	pygame.display.flip()
 	clock.tick(60)
-	
+
 	#scroll the level down
 	scrollPosition -= constants.SCROLL_RATE
 	#movedlevelrect = movedlevelrect.move(0,SCROLL_RATE)

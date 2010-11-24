@@ -35,6 +35,11 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
+			
+	if not theship.handle_event(event):
+		pass #todo: handle events the ship isn't interested in
+
+	theship.step(scrollPosition)
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
