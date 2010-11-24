@@ -30,10 +30,17 @@ scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
 
+# sound on two channels, both at start of game
 pygame.mixer.init(44100,-16,16, 1024)
 background = pygame.mixer.Sound("sounds/background/background.ogg")
+danger = pygame.mixer.Sound("sounds/dangerWarning.ogg")
+danger.set_volume(1.0)
 background.set_volume(0.3)
-background.play()
+channelBackground = pygame.mixer.find_channel()
+channelBackground.play(background)
+channelExtra = pygame.mixer.find_channel() #locate chanel w/o any sound on it
+channelExtra.play(danger)
+
 while running:
 	
 	for event in pygame.event.get():
@@ -52,7 +59,7 @@ while running:
 
 	pygame.display.flip()
 	clock.tick(60)
-
+	
 	#scroll the level down
 	scrollPosition -= constants.SCROLL_RATE
 	#movedlevelrect = movedlevelrect.move(0,SCROLL_RATE)
