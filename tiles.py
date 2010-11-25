@@ -40,20 +40,19 @@ class Tiles(pygame.rect.Rect):
 				tilecode = tilecode.replace("7", "1")
 				tset = 3
 		
-		# Set 3: MOUNTIAN-LAVA
+		# Set 4: MOUNTIAN-LAVA
 		if "7" in tilecode:
 			if "9" in tilecode:
 				tilecode = tilecode.replace("7", "0")
 				tilecode = tilecode.replace("9", "1")
 				tset = 4
 				
-		# Set 3: MOUNTIAN-ICE
+		# Set 5: MOUNTIAN-ICE
 		if "7" in tilecode:
 			if "8" in tilecode:
 				tilecode = tilecode.replace("7", "0")
 				tilecode = tilecode.replace("8", "1")
-				tset = 4
-		
+				tset = 5
 		
 		# sets with water
 		if "4" in tilecode:
@@ -72,6 +71,13 @@ class Tiles(pygame.rect.Rect):
 				tilecode = tilecode.replace("1", "D") # dirt fix
 				tilecode = tilecode.replace("3", "1")
 				tset = 7
+		
+		# Set 9: HILL-GAP
+		if "5" in tilecode:
+			if "6" in tilecode:
+				tilecode = tilecode.replace("5", "0")
+				tilecode = tilecode.replace("6", "1")
+				tset = 9
 				
 		# Pure tile fix: alternatively I could hardcode them into self.tiles
 		#  or figure out my logic better so these resolve in set translation
@@ -84,13 +90,16 @@ class Tiles(pygame.rect.Rect):
 		if tilecode == "5555":
 			tilecode = "0000" # this covers pure hill
 			tset = 2
+		if tilecode == "6666":
+			tilecode = "1111" # this covers pure hill
+			tset = 9
 		if tilecode == "7777" in tilecode: # covers pure deepwater
 			tilecode = "1111"
 			tset = 3
-		if tilecode == "8888" in tilecode: # covers pure deepwater
+		if tilecode == "8888" in tilecode: # covers pure snow
 			tilecode = "1111"
-			tset = 4
-		if tilecode == "9999" in tilecode: # covers pure deepwater
+			tset = 5
+		if tilecode == "9999" in tilecode: # covers pure lava
 			tilecode = "1111"
 			tset = 4
 		if tilecode == "AAAA" in tilecode: # covers pure deepwater
