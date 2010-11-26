@@ -4,6 +4,7 @@ import pygame
 import level
 import tiles
 import ship
+import turret
 import constants
 import network
 
@@ -21,7 +22,12 @@ pygame.display.set_caption("Tyrian Defense SERVER")
 clock = pygame.time.Clock()
 
 level = level.Level()
+physicalObjects = []
 theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level, Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT))
+physicalObjects.append(theship)
+
+# physics need a little more work before this will work
+#physicalObjects.append(turret.Turret((constants.SCREEN_WIDTH/2, level.rect.height - 200)))
 
 leveldata = pickle.dumps( level.terrian, constants.PROTOCOL )
 network.sendData( conn, leveldata )
@@ -39,12 +45,28 @@ while running:
 	if not theship.handle_event(event):
 		pass #todo: handle events the ship isn't interested in
 
-	theship.step(scrollPosition)
+	for o in physicalObjects[:]:  # update all physical objects
+		o.step(scrollPosition)  # update the object
+		if(o.destroyed):
+			physicalObjects.remove(o)  # remove destroyed objects from the universe
+	for o1 in physicalObjects:  # collision-detection time!
+		for o2 in physicalObjects:
+			if o1 != o2:
+				if o1.physicsRect.colliderect(o2.physicsRect):
+					#o1.destroyed = True  # resolve collision by
+					o2.destroyed = True  #  destroying objects
+	for o in physicalObjects[:]:  # add any new objects to the universe
+		while len(o.childObjects) != 0:
+			physicalObjects.append(o.childObjects.pop(0))
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
 	screen.blit(level.image, movedlevelrect)
-	screen.blit(theship.image, Rect((theship.rect.x, theship.rect.y - scrollPosition),(theship.rect.width, theship.rect.height)), theship.area)
+	for o in physicalObjects:
+		# commented lines are for physics testing
+		#screen.fill((255, 255, 255), Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)))
+		#screen.fill((255, 0, 0), Rect((o.physicsRect.x, o.physicsRect.y - scrollPosition), (o.physicsRect.width, o.physicsRect.height)))
+		screen.blit(o.image, Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)), o.area)
 
 	pygame.display.flip()
 	clock.tick(60)
