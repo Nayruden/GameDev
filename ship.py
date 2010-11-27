@@ -6,8 +6,10 @@ import bullet
 
 #for AWESOME input!!! (fixing pygame's b0rked event handling)
 
-GUN_COOLDOWN_TIME = 10
+SHIP_WIDTH = 46
+SHIP_HEIGHT = 50
 
+GUN_COOLDOWN_TIME = 10
 
 class Ship(PhysicalObject):
 	"""This class represents the ship"""
@@ -15,7 +17,7 @@ class Ship(PhysicalObject):
 	timeUntilWeaponCanFireAgain = 0
 
 
-	def __init__(self, position, level,level_actual_rect):
+	def __init__(self, position, level, boundsRect):
 
 		PhysicalObject.__init__(self, position)
 		self.level = level
@@ -23,24 +25,29 @@ class Ship(PhysicalObject):
 		self.image = pygame.image.load('images/ship.png')
 		self.rect = self.image.get_rect()
 		
-		self.actions = {	"center":	(46*2,0,46,50),
-			"left":	 (46*0,0,46,50),
-			"left-center":	(46*1,0,46,50),
-			"right-center":	(46*3,0,46,50),
-			"right":	(46*4,0,46,50)                                         
+		self.actions = {	"center":	(SHIP_WIDTH*2, 0, SHIP_WIDTH,SHIP_HEIGHT),
+			"left":	 (SHIP_WIDTH*0, 0, SHIP_WIDTH,SHIP_HEIGHT),
+			"left-center":	(SHIP_WIDTH*1, 0, SHIP_WIDTH,SHIP_HEIGHT),
+			"right-center":	(SHIP_WIDTH*3, 0, SHIP_WIDTH,SHIP_HEIGHT),
+			"right":	(SHIP_WIDTH*4, 0, SHIP_WIDTH,SHIP_HEIGHT)                                         
 			}
 		
 		self.action = "center"
 		self.area = pygame.rect.Rect(self.actions[self.action])
 
-		self.level_actual_rect = level_actual_rect
+		self.boundsRect = boundsRect
 
-		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, 46, 50)
+		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, SHIP_WIDTH, SHIP_HEIGHT)
+
 		
 	def step(self, scrollPosition):
+
 			#tight physics
 			v_step = 0.5
-			v_target = 6.0
+			v_target = 6.0  # max. speed relative to screen
+
+			# translate movement boundary
+			self.boundsRect.y = scrollPosition
 
 			# determine speed
 			def towards(current,expected):
@@ -48,17 +55,18 @@ class Ship(PhysicalObject):
 				if current > expected:
 					return current - v_step
 				return current + v_step
-				
+
+			# continue to determine speed
 			if self.DOWN and not self.UP:
-				self.v_y = towards(self.v_y,v_target)
+				self.v_y = towards(self.v_y,v_target-constants.SCROLL_RATE)
 			elif self.UP and not self.DOWN:
-				self.v_y = towards(self.v_y,-v_target)
+				self.v_y = towards(self.v_y,-v_target-constants.SCROLL_RATE)
 			elif not self.UP and not self.DOWN:
-				self.v_y = towards(self.v_y,0)
+				self.v_y = towards(self.v_y,-constants.SCROLL_RATE)
 			if self.LEFT and not self.RIGHT:
-				self.v_x = towards(self.v_x,-v_target)
+				self.v_x = towards(self.v_x,-v_target-constants.SCROLL_RATE)
 			elif self.RIGHT and not self.LEFT:
-				self.v_x = towards(self.v_x,v_target)
+				self.v_x = towards(self.v_x,v_target-constants.SCROLL_RATE)
 			elif not self.LEFT and not self.RIGHT:
 				self.v_x = towards(self.v_x,0)
 
@@ -66,14 +74,14 @@ class Ship(PhysicalObject):
 			PhysicalObject.step(self, scrollPosition)
 			
 			#hard bounds fix
-			if self.physicsRect.x + self.physicsRect.width > self.level_actual_rect.width:
-				self.setX(self.level_actual_rect.width - self.physicsRect.width)
-			if self.r_x < 0:
-				self.setX(0)
-			if self.r_y + self.physicsRect.height > scrollPosition + constants.SCREEN_HEIGHT:
-				self.setY(scrollPosition + constants.SCREEN_HEIGHT - self.physicsRect.height)
-			if self.r_y < scrollPosition:
-				self.setY(scrollPosition)
+			if self.physicsRect.x + self.physicsRect.width > self.boundsRect.x + self.boundsRect.width:
+				self.setX(self.boundsRect.x + self.boundsRect.width - self.physicsRect.width)
+			if self.r_x < self.boundsRect.x:
+				self.setX(self.boundsRect.x)
+			if self.r_y + self.physicsRect.height > self.boundsRect.y + self.boundsRect.height:
+				self.setY(self.boundsRect.y + self.boundsRect.height - self.physicsRect.height)
+			if self.r_y < self.boundsRect.y:
+				self.setY(self.boundsRect.y)
 			
 			#update image
 			if 0 < self.v_x < (v_target / 2.0):
@@ -92,6 +100,8 @@ class Ship(PhysicalObject):
 			# update weapon
 			if self.timeUntilWeaponCanFireAgain > 0:
 				self.timeUntilWeaponCanFireAgain -= 1
+
+			#print 'ship (x,y) = ', (self.r_x, self.r_y)
 
 
 	def handle_event(self,event):
@@ -113,7 +123,7 @@ class Ship(PhysicalObject):
 		elif event.dict["key"]==32 and event.type==pygame.KEYDOWN: #space
 			#print("Time left: ", self.timeUntilWeaponCanFireAgain);
 			if self.timeUntilWeaponCanFireAgain <= 0:
-				theBullet = bullet.Bullet((self.rect.x, self.rect.y - 40))  # 40 gets bullet far enough from ship
+				theBullet = bullet.Bullet((self.rect.x + SHIP_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y - (bullet.BULLET_HEIGHT + 6)))  # gets bullet far enough from ship
 				# the following two lines are for classic arcade physics
 				theBullet.v_x - 0
 				theBullet.v_y = -bullet.DEFAULT_SPEED

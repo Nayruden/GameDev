@@ -2,6 +2,10 @@
 import pygame
 import constants
 
+COLLISION_TYPE_UNDEF = 0
+COLLISION_TYPE_GROUND = 1
+COLLISION_TYPE_BULLET = 2
+COLLISION_TYPE_SHIP = 3
 
 class PhysicalObject(pygame.sprite.Sprite):
 	"""This class represents a generic physical object"""
@@ -11,6 +15,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 	area = pygame.rect.Rect(0, 0, 0, 0)
 	rect = pygame.rect.Rect(0, 0, 0, 0)
 	physicsRect = pygame.rect.Rect(0, 0, 0, 0)
+	collisionType = COLLISION_TYPE_UNDEF
 	destroyed = False
 	r_x = 0.0  # location x; I didn't want to use something as generic as "x" and "y", so I pulled from physics/engineering convention
 	r_y = 0.0  # location y
@@ -33,7 +38,13 @@ class PhysicalObject(pygame.sprite.Sprite):
 
 		#update position
 		self.setX(self.getX() + self.v_x)
-		self.setY(self.getY() + self.v_y - constants.SCROLL_RATE)
+		self.setY(self.getY() + self.v_y)
+
+
+	def resolveCollisionWith(self, otherObject):
+		# apply collision effects to this object, not the other object
+		if otherObject.collisionType == COLLISION_TYPE_BULLET:
+			self.destroyed = True
 
 
 	def getX(self):

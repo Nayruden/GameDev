@@ -26,8 +26,11 @@ physicalObjects = []
 theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level, Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT))
 physicalObjects.append(theship)
 
-# physics need a little more work before this will work
-#physicalObjects.append(turret.Turret((constants.SCREEN_WIDTH/2, level.rect.height - 200)))
+# sprinkle some targets across the map purely for testing physics
+# this should be removed from the server code eventually
+physicalObjects.append(turret.Turret((170, 4475)))
+physicalObjects.append(turret.Turret((250, 4275)))
+physicalObjects.append(turret.Turret((450, 4425)))
 
 leveldata = pickle.dumps( level.terrian, constants.PROTOCOL )
 network.sendData( conn, leveldata )
@@ -53,8 +56,8 @@ while running:
 		for o2 in physicalObjects:
 			if o1 != o2:
 				if o1.physicsRect.colliderect(o2.physicsRect):
-					#o1.destroyed = True  # resolve collision by
-					o2.destroyed = True  #  destroying objects
+					o1.resolveCollisionWith(o2)  # resolve collision by
+					o2.resolveCollisionWith(o1)  #  destroying objects
 	for o in physicalObjects[:]:  # add any new objects to the universe
 		while len(o.childObjects) != 0:
 			physicalObjects.append(o.childObjects.pop(0))
