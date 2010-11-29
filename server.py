@@ -7,6 +7,8 @@ import ship
 import turret
 import constants
 import network
+from network import Message
+import struct
 
 from pygame.rect import Rect
 
@@ -44,7 +46,7 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-			
+
 	if not theship.handle_event(event):
 		pass #todo: handle events the ship isn't interested in
 
@@ -77,5 +79,13 @@ while running:
 	#scroll the level down
 	scrollPosition -= constants.SCROLL_RATE
 	#movedlevelrect = movedlevelrect.move(0,SCROLL_RATE)
+
+	#Network:
+	network.sendIntData( conn, Message.SCROLLSYNC )
+	network.sendIntData( conn, scrollPosition )
+
+	#Need to generalize this into any phys obj and come up with some ID system for the objs
+	network.sendIntData( conn, Message.SHIPSYNC )
+	network.sendData( conn, struct.pack( "ffff", theship.getX(), theship.getY(), theship.getVX(), theship.getVY() ) )
 
 conn.close()

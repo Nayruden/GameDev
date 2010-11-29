@@ -63,6 +63,12 @@ class PhysicalObject(pygame.sprite.Sprite):
 		self.rect.y = self.r_y
 		self.physicsRect.y = self.r_y
 
+	def getVX(self):
+		return self.v_x
+
+	def getVY(self):
+		return self.v_y
+
 	def setPosition(self, newX, newY):
 		self.setX(self, newX)
 		self.setY(self, newY)
