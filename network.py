@@ -3,7 +3,13 @@ import socket
 
 class Message:
 	SCROLLSYNC = 1
-	SHIPSYNC = 2
+	NEWOBJ = 2
+	OBJSYNC = 3
+
+class Type:
+	SHIP = 1
+	BULLET = 2
+	TURRET = 3
 
 def sendData( conn, data ):
 	size = struct.pack( "I", len( data ) )

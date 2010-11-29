@@ -11,6 +11,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 	"""This class represents a generic physical object"""
 
 	childObjects = []  # temporary storage for physical objects created by this object (such as bullets)
+	networkID = None
 
 	area = pygame.rect.Rect(0, 0, 0, 0)
 	rect = pygame.rect.Rect(0, 0, 0, 0)

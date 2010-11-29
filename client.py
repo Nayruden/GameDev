@@ -5,9 +5,12 @@ import level
 import tiles
 import ship
 import constants
+import turret
+import bullet
 import network
 import pickle
 from network import Message
+from network import Type
 import math
 import struct
 
@@ -25,7 +28,9 @@ clock = pygame.time.Clock()
 packed = network.receiveData( conn )
 leveldata = pickle.loads( packed )
 level = level.Level( leveldata )
-theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level, Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT))
+#theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
+
+physicalObjects = {}
 
 scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 
@@ -52,8 +57,11 @@ while running:
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
 	screen.blit(level.image, movedlevelrect)
-	theship.step(scrollPosition)
-	screen.blit(theship.image, Rect((theship.rect.x, theship.rect.y - scrollPosition),(theship.rect.width, theship.rect.height)), theship.area)
+	#theship.step(scrollPosition)
+	#screen.blit(theship.image, Rect((theship.rect.x, theship.rect.y - scrollPosition),(theship.rect.width, theship.rect.height)), theship.area)
+
+	for i, o in physicalObjects.iteritems():
+		screen.blit(o.image, Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)), o.area)
 
 	pygame.display.flip()
 	clock.tick(60)
@@ -68,8 +76,22 @@ while running:
 			scrollPositionTarget, = network.receiveIntData( conn )
 			if math.fabs( scrollPosition - scrollPositionTarget ) > 10: # Can't be off by more than this amount
 				scrollPosition = scrollPositionTarget
-		elif message == Message.SHIPSYNC:
-			theship.r_x, theship.r_y, theship.v_x, theship.v_y = struct.unpack( "ffff", network.receiveData( conn ) )
+		elif message == Message.NEWOBJ:
+			typ, netid = struct.unpack( "ii", network.receiveData( conn ) )
+			obj = None
+			if typ == Type.SHIP:
+				obj = ship.Ship((0,0), level)
+			elif typ == Type.TURRET:
+				obj = turret.Turret((0,0))
+			elif typ == Type.BULLET:
+				obj = bullet.Bullet((0,0))
+			physicalObjects[ netid ] = obj
+		elif message == Message.OBJSYNC:
+			netid, x, y, vx, vy = struct.unpack( "iffff", network.receiveData( conn ) )
+			obj = physicalObjects[ netid ]
+			obj.setX( x )
+			obj.setY( y )
+			obj.v_x, obj.v_y = (vx, vy)
 
 		message = network.receiveIntData( conn, True )
 

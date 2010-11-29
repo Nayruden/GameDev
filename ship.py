@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import pygame
 import constants
+from network import Type
 from physical_object import PhysicalObject
 import bullet
+
+from pygame.rect import Rect
 
 #for AWESOME input!!! (fixing pygame's b0rked event handling)
 
@@ -15,31 +18,32 @@ class Ship(PhysicalObject):
 	"""This class represents the ship"""
 
 	timeUntilWeaponCanFireAgain = 0
+	typ = Type.SHIP
 
 
-	def __init__(self, position, level, boundsRect):
+	def __init__(self, position, level):
 
 		PhysicalObject.__init__(self, position)
 		self.level = level
-		
+
 		self.image = pygame.image.load('images/ship.png')
 		self.rect = self.image.get_rect()
-		
+
 		self.actions = {	"center":	(SHIP_WIDTH*2, 0, SHIP_WIDTH,SHIP_HEIGHT),
 			"left":	 (SHIP_WIDTH*0, 0, SHIP_WIDTH,SHIP_HEIGHT),
 			"left-center":	(SHIP_WIDTH*1, 0, SHIP_WIDTH,SHIP_HEIGHT),
 			"right-center":	(SHIP_WIDTH*3, 0, SHIP_WIDTH,SHIP_HEIGHT),
-			"right":	(SHIP_WIDTH*4, 0, SHIP_WIDTH,SHIP_HEIGHT)                                         
+			"right":	(SHIP_WIDTH*4, 0, SHIP_WIDTH,SHIP_HEIGHT)
 			}
-		
+
 		self.action = "center"
 		self.area = pygame.rect.Rect(self.actions[self.action])
 
-		self.boundsRect = boundsRect
+		self.boundsRect = Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT)
 
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, SHIP_WIDTH, SHIP_HEIGHT)
 
-		
+
 	def step(self, scrollPosition):
 
 			#tight physics
@@ -72,7 +76,7 @@ class Ship(PhysicalObject):
 
 			# update position
 			PhysicalObject.step(self, scrollPosition)
-			
+
 			#hard bounds fix
 			if self.physicsRect.x + self.physicsRect.width > self.boundsRect.x + self.boundsRect.width:
 				self.setX(self.boundsRect.x + self.boundsRect.width - self.physicsRect.width)
@@ -82,7 +86,7 @@ class Ship(PhysicalObject):
 				self.setY(self.boundsRect.y + self.boundsRect.height - self.physicsRect.height)
 			if self.r_y < self.boundsRect.y:
 				self.setY(self.boundsRect.y)
-			
+
 			#update image
 			if 0 < self.v_x < (v_target / 2.0):
 				self.action = "right-center"
@@ -94,7 +98,7 @@ class Ship(PhysicalObject):
 				self.action = "left-center"
 			elif -(v_target) < self.v_x < -(v_target/2.0):
 				self.action = "left"
-			
+
 			self.area = pygame.rect.Rect(self.actions[self.action])
 
 			# update weapon
@@ -134,6 +138,6 @@ class Ship(PhysicalObject):
 				self.timeUntilWeaponCanFireAgain = GUN_COOLDOWN_TIME
 		else:
 			 handled_event = False
-		
+
 		return handled_event
-		
+

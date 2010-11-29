@@ -25,7 +25,8 @@ clock = pygame.time.Clock()
 
 level = level.Level()
 physicalObjects = []
-theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level, Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT))
+lastNetworkID = 0
+theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
 physicalObjects.append(theship)
 
 # sprinkle some targets across the map purely for testing physics
@@ -84,8 +85,14 @@ while running:
 	network.sendIntData( conn, Message.SCROLLSYNC )
 	network.sendIntData( conn, scrollPosition )
 
-	#Need to generalize this into any phys obj and come up with some ID system for the objs
-	network.sendIntData( conn, Message.SHIPSYNC )
-	network.sendData( conn, struct.pack( "ffff", theship.getX(), theship.getY(), theship.getVX(), theship.getVY() ) )
+	for o in physicalObjects[:]:
+		if o.networkID == None:
+			network.sendIntData( conn, Message.NEWOBJ )
+			lastNetworkID = lastNetworkID + 1
+			o.networkID = lastNetworkID
+			network.sendData( conn, struct.pack( "ii", o.typ, o.networkID ) )
+
+		network.sendIntData( conn, Message.OBJSYNC )
+		network.sendData( conn, struct.pack( "iffff", o.networkID, o.getX(), o.getY(), o.getVX(), o.getVY() ) )
 
 conn.close()

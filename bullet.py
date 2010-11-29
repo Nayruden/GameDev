@@ -2,6 +2,7 @@
 import pygame
 import constants
 import physical_object
+from network import Type
 from physical_object import PhysicalObject
 
 
@@ -15,6 +16,7 @@ LIFE_SPAN = 45  # in frames at the moment
 class Bullet(PhysicalObject):
 	"""This class represents a generic bullet"""
 	timeToLive = 0
+	typ = Type.BULLET
 
 
 	def __init__(self, position):
@@ -23,12 +25,12 @@ class Bullet(PhysicalObject):
 
 		self.collisionType = physical_object.COLLISION_TYPE_BULLET
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, BULLET_WIDTH, BULLET_HEIGHT)
-		
+
 		self.image = pygame.image.load('images/projectiles.png')
 		self.rect = self.image.get_rect()
-		
+
 		self.actions = {"all": (167, 113, self.physicsRect.width, self.physicsRect.height)}
-		
+
 		self.action = "all"
 		self.area = pygame.rect.Rect(self.actions[self.action])
 
@@ -46,4 +48,4 @@ class Bullet(PhysicalObject):
 	def resolveCollisionWith(self, otherObject):
 		if otherObject.collisionType != physical_object.COLLISION_TYPE_BULLET:
 			self.destroyed = True
-		
+
