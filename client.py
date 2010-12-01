@@ -76,7 +76,7 @@ while running:
 			if typ == Type.SHIP:
 				obj = theship = ship.Ship((0,0), level)
 			elif typ == Type.TURRET:
-				obj = turret.Turret((0,0))
+				obj = turret.Turret((0,0), level)
 			elif typ == Type.BULLET:
 				obj = bullet.Bullet((0,0))
 			physicalObjects[ netid ] = obj

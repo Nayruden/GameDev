@@ -36,9 +36,9 @@ physicalObjects.append(theship)
 
 # sprinkle some targets across the map purely for testing physics
 # this should be removed from the server code eventually
-physicalObjects.append(turret.Turret((170, 4475)))
-physicalObjects.append(turret.Turret((250, 4275)))
-physicalObjects.append(turret.Turret((450, 4425)))
+physicalObjects.append(turret.Turret((170, 4475), level))
+physicalObjects.append(turret.Turret((250, 4275), level))
+physicalObjects.append(turret.Turret((450, 4425), level))
 
 leveldata = pickle.dumps( level.terrian, constants.PROTOCOL )
 network.sendData( conn, leveldata )

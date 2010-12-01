@@ -50,6 +50,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 		if otherObject.collisionType == COLLISION_TYPE_BULLET:
 			self.destroyed = True
 			explode = pygame.mixer.Sound(constants.EXPLOSION_SFX)
+			explode.set_volume(0.4)
 			play_sound.PlaySounds(explode)
 
 
