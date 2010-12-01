@@ -5,6 +5,7 @@ class Message:
 	SCROLLSYNC = 1
 	NEWOBJ = 2
 	OBJSYNC = 3
+	DESTROYOBJ = 4
 
 class Type:
 	SHIP = 1
@@ -29,8 +30,13 @@ def receiveData( conn, noblock=False ):
 		if noblock:
 			conn.setblocking( 1 )
 
+	buf = ""
+	while size > 0:
+		rcvd = conn.recv( size )
+		size -= len( rcvd )
+		buf += rcvd
 
-	return conn.recv( size )
+	return buf
 
 def receiveIntData( conn, noblock=False ):
 	data = receiveData( conn, noblock )

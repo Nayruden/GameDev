@@ -47,10 +47,9 @@ while running:
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
 	screen.blit(level.image, movedlevelrect)
-	#theship.step(scrollPosition)
-	#screen.blit(theship.image, Rect((theship.rect.x, theship.rect.y - scrollPosition),(theship.rect.width, theship.rect.height)), theship.area)
 
 	for i, o in physicalObjects.iteritems():
+		o.step(scrollPosition)
 		screen.blit(o.image, Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)), o.area)
 
 	pygame.display.flip()
@@ -82,6 +81,10 @@ while running:
 			obj.setX( x )
 			obj.setY( y )
 			obj.v_x, obj.v_y = (vx, vy)
+		elif message == Message.DESTROYOBJ:
+			netid, = network.receiveIntData( conn )
+			if netid in physicalObjects:
+				del physicalObjects[ netid ]
 
 		message = network.receiveIntData( conn, True )
 

@@ -29,6 +29,7 @@ clock = pygame.time.Clock()
 
 level = level.Level()
 physicalObjects = []
+removeQueue = []
 lastNetworkID = 0
 theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
 physicalObjects.append(theship)
@@ -64,6 +65,7 @@ while running:
 	for o in physicalObjects[:]:  # update all physical objects
 		o.step(scrollPosition)  # update the object
 		if(o.destroyed):
+			removeQueue.append(o.networkID)
 			physicalObjects.remove(o)  # remove destroyed objects from the universe
 	for o1 in physicalObjects:  # collision-detection time!
 		for o2 in physicalObjects:
@@ -94,6 +96,11 @@ while running:
 	#Network:
 	network.sendIntData( conn, Message.SCROLLSYNC )
 	network.sendIntData( conn, scrollPosition )
+
+	for netid in removeQueue:
+		network.sendIntData( conn, Message.DESTROYOBJ )
+		network.sendIntData( conn, netid )
+	removeQueue = []
 
 	for o in physicalObjects[:]:
 		if o.networkID == None:
