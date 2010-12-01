@@ -7,7 +7,8 @@ import bullet
 
 from pygame.rect import Rect
 import play_sound
-
+from pygame import mixer
+from pygame.mixer import Sound
 TURRET_WIDTH = 24
 TURRET_HEIGHT = 28
 
@@ -49,7 +50,8 @@ class Turret(PhysicalObject):
 			self.timeUntilWeaponCanFireAgain -= 1
 				
 		if self.timeUntilWeaponCanFireAgain <= 0 and self.physicsRect.colliderect(self.boundsRect):
-			soundEfx = pygame.mixer.Sound(constants.BULLET_SFX)
+			soundEfx = pygame.mixer.Sound(constants.TURRET_BULLET_SFX)
+			soundEfx.set_volume(0.5)
 			play_sound.PlaySounds(soundEfx)
 			theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)))  # gets bullet far enough from ship
 			# the following two lines are for classic arcade physics
