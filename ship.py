@@ -135,7 +135,7 @@ class Ship(PhysicalObject):
 				play_sound.PlaySounds(soundEfx)
 				theBullet = bullet.Bullet((self.rect.x + SHIP_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y - (bullet.BULLET_HEIGHT + 6)))  # gets bullet far enough from ship
 				# the following two lines are for classic arcade physics
-				theBullet.v_x - 0
+				theBullet.v_x = 0
 				theBullet.v_y = -bullet.DEFAULT_SPEED
 				# the following two lines are for more real-world-type phsyics
 				#theBullet.v_x = self.v_x
