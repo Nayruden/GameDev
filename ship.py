@@ -6,7 +6,10 @@ from physical_object import PhysicalObject
 import bullet
 
 from pygame.rect import Rect
-
+#imports for sound
+import play_sound
+from pygame import mixer
+from pygame.mixer import Sound
 #for AWESOME input!!! (fixing pygame's b0rked event handling)
 
 SHIP_WIDTH = 46
@@ -19,7 +22,7 @@ class Ship(PhysicalObject):
 
 	timeUntilWeaponCanFireAgain = 0
 	typ = Type.SHIP
-
+	
 
 	def __init__(self, position, level):
 
@@ -126,7 +129,10 @@ class Ship(PhysicalObject):
 			#self.LEFT = False
 		elif event.dict["key"]==32 and event.type==pygame.KEYDOWN: #space
 			#print("Time left: ", self.timeUntilWeaponCanFireAgain);
+				
 			if self.timeUntilWeaponCanFireAgain <= 0:
+				soundEfx = pygame.mixer.Sound(constants.BULLET_SFX)
+				play_sound.PlaySounds(soundEfx)
 				theBullet = bullet.Bullet((self.rect.x + SHIP_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y - (bullet.BULLET_HEIGHT + 6)))  # gets bullet far enough from ship
 				# the following two lines are for classic arcade physics
 				theBullet.v_x - 0

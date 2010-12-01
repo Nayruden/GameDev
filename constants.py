@@ -1,4 +1,6 @@
-
+BACKGROUND_MUSIC = "sounds/background/background.ogg"
+BULLET_SFX = "sounds/lazer.wav" 
+EXPLOSION_SFX = "sounds/explosionTwo.wav"
 SCREEN_WIDTH = 624
 SCREEN_HEIGHT = 480
 SCROLL_RATE = 1
