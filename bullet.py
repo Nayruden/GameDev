@@ -6,6 +6,7 @@ from network import Type
 from physical_object import PhysicalObject
 
 
+
 BULLET_WIDTH = 20
 BULLET_HEIGHT = 34
 
@@ -16,11 +17,10 @@ LIFE_SPAN = 45  # in frames at the moment
 class Bullet(PhysicalObject):
 	"""This class represents a generic bullet"""
 	timeToLive = 0
-	typ = Type.BULLET
-
-
+	typ = Type.BULLET	
+	
 	def __init__(self, position):
-
+		
 		PhysicalObject.__init__(self, position)
 
 		self.collisionType = physical_object.COLLISION_TYPE_BULLET

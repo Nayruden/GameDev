@@ -12,6 +12,10 @@ import struct
 
 from pygame.rect import Rect
 
+import play_sound
+from pygame import mixer
+from pygame.mixer import Sound
+
 s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
 s.bind( ('', constants.PORT) )
 s.listen( 1 )
@@ -43,6 +47,12 @@ scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
+
+# create the background music and send it to the class to play the sounds
+sounds = pygame.mixer.Sound(constants.BACKGROUND_MUSIC)
+sounds.set_volume(0.5)
+play_sound.PlaySounds(sounds)
+
 
 while running:
 	for event in pygame.event.get():

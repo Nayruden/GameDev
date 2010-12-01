@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import pygame
 import constants
+import play_sound
+from pygame import mixer
+from pygame.mixer import Sound
 
 COLLISION_TYPE_UNDEF = 0
 COLLISION_TYPE_GROUND = 1
@@ -46,6 +49,8 @@ class PhysicalObject(pygame.sprite.Sprite):
 		# apply collision effects to this object, not the other object
 		if otherObject.collisionType == COLLISION_TYPE_BULLET:
 			self.destroyed = True
+			explode = pygame.mixer.Sound(constants.EXPLOSION_SFX)
+			play_sound.PlaySounds(explode)
 
 
 	def getX(self):
