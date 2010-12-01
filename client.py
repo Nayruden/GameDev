@@ -44,7 +44,7 @@ while running:
 		if event.type == pygame.QUIT:
 			running = False
 		elif event.type == pygame.KEYDOWN and event.dict["key"]==32:
-			obj = turret.Turret((theship.r_x,theship.r_y - 400))
+			obj = turret.Turret((theship.r_x,theship.r_y - 400),level)
 			from random import choice
 			#this is really a terrible idea...
 			physicalObjects[choice(range(99999))] = obj
