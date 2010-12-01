@@ -1,6 +1,6 @@
 BACKGROUND_MUSIC = "sounds/background/background.ogg"
 BULLET_SFX = "sounds/lazer.wav" 
-EXPLOSION_SFX = "sounds/explosionTwo.wav"
+EXPLOSION_SFX = "sounds/11_EXPRETAP.wav"
 TURRET_BULLET_SFX = "sounds/03_TEMP10.wav"
 SCREEN_WIDTH = 624
 SCREEN_HEIGHT = 480
