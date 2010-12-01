@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 packed = network.receiveData( conn )
 leveldata = pickle.loads( packed )
 level = level.Level( leveldata )
-#theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
+theship = None
 
 physicalObjects = {}
 
@@ -43,6 +43,11 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
+		elif event.type == pygame.KEYDOWN and event.dict["key"]==32:
+			obj = turret.Turret((theship.r_x,theship.r_y - 400))
+			from random import choice
+			#this is really a terrible idea...
+			physicalObjects[choice(range(99999))] = obj
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
@@ -69,7 +74,7 @@ while running:
 			typ, netid = struct.unpack( "ii", network.receiveData( conn ) )
 			obj = None
 			if typ == Type.SHIP:
-				obj = ship.Ship((0,0), level)
+				obj = theship = ship.Ship((0,0), level)
 			elif typ == Type.TURRET:
 				obj = turret.Turret((0,0))
 			elif typ == Type.BULLET:
