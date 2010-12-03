@@ -28,17 +28,16 @@ pygame.display.set_caption("Tyrian Defense SERVER")
 clock = pygame.time.Clock()
 
 level = level.Level()
-physicalObjects = []
 removeQueue = []
 lastNetworkID = 0
 theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
-physicalObjects.append(theship)
+level.physicalObjects.append(theship)
 
 # sprinkle some targets across the map purely for testing physics
 # this should be removed from the server code eventually
-physicalObjects.append(turret.Turret((170, 4475), level))
-physicalObjects.append(turret.Turret((250, 4275), level))
-physicalObjects.append(turret.Turret((450, 4425), level))
+level.physicalObjects.append(turret.Turret((170, 4475), level))
+level.physicalObjects.append(turret.Turret((250, 4275), level))
+level.physicalObjects.append(turret.Turret((450, 4425), level))
 
 leveldata = pickle.dumps( level.terrian, constants.PROTOCOL )
 network.sendData( conn, leveldata )
@@ -62,25 +61,16 @@ while running:
 	if not theship.handle_event(event):
 		pass #todo: handle events the ship isn't interested in
 
-	for o in physicalObjects[:]:  # update all physical objects
-		o.step(scrollPosition)  # update the object
-		if(o.destroyed):
-			removeQueue.append(o.networkID)
-			physicalObjects.remove(o)  # remove destroyed objects from the universe
-	for o1 in physicalObjects:  # collision-detection time!
-		for o2 in physicalObjects:
-			if o1 != o2:
-				if o1.physicsRect.colliderect(o2.physicsRect):
-					o1.resolveCollisionWith(o2)  # resolve collision by
-					o2.resolveCollisionWith(o1)  #  destroying objects
-	for o in physicalObjects[:]:  # add any new objects to the universe
-		while len(o.childObjects) != 0:
-			physicalObjects.append(o.childObjects.pop(0))
+	level.step(scrollPosition)
+
+	# do some network stuff
+	for o in level.physicalObjectsExternalRemoveList:
+		removeQueue.append(o.networkID)
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
 	screen.blit(level.image, movedlevelrect)
-	for o in physicalObjects:
+	for o in level.physicalObjects:
 		# commented lines are for physics testing
 		#screen.fill((255, 255, 255), Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)))
 		#screen.fill((255, 0, 0), Rect((o.physicsRect.x, o.physicsRect.y - scrollPosition), (o.physicsRect.width, o.physicsRect.height)))
@@ -102,7 +92,7 @@ while running:
 		network.sendIntData( conn, netid )
 	removeQueue = []
 
-	for o in physicalObjects[:]:
+	for o in level.physicalObjects[:]:
 		if o.networkID == None:
 			network.sendIntData( conn, Message.NEWOBJ )
 			lastNetworkID = lastNetworkID + 1

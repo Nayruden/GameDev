@@ -5,6 +5,12 @@ import terragen
 import constants
 
 class Level(object):
+
+	# instance varaibles
+	physicalObjects = []
+	physicalObjectsExternalRemoveList = []  # used to inform other entities that objects have been destroyed/deleted
+	# note: physicalObjectsExternalRemoveList was intended to be emptied at the beginning of each step
+
 	def __init__(self, terrian = None):
 		if terrian is None:
 			cols = constants.COLS # we want 26 cols of tiles to cover a width of 624
@@ -54,3 +60,21 @@ class Level(object):
 		self.rect = self.image.get_rect()
 
 		self.yoffset = constants.ROWS*theight - 480
+
+
+	def step(self, scrollPosition):
+		self.physicalObjectsExternalRemoveList[:] = []  # empty the list of objects desstroyed in the last step
+		for o in self.physicalObjects[:]:  # update all physical objects
+			o.step(scrollPosition)  # update the object
+			if(o.destroyed):
+				self.physicalObjectsExternalRemoveList.append(o);
+				self.physicalObjects.remove(o)  # remove destroyed objects from the universe
+		for o1 in self.physicalObjects:  # collision-detection time!
+			for o2 in self.physicalObjects:
+				if o1 != o2:
+					if o1.physicsRect.colliderect(o2.physicsRect):
+						o1.resolveCollisionWith(o2)  # resolve collision by
+						o2.resolveCollisionWith(o1)  #  destroying objects
+		for o in self.physicalObjects[:]:  # add any new objects to the universe
+			while len(o.childObjects) != 0:
+				self.physicalObjects.append(o.childObjects.pop(0))
