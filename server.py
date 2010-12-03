@@ -48,7 +48,7 @@ clock = pygame.time.Clock()
 level = level.Level()
 physicalObjects = []
 removeQueue = []
-lastNetworkID = 0
+lastNetworkID = 0 # server uses even ids
 theship = ship.Ship((constants.SCREEN_WIDTH/2, level.rect.height - 60), level)
 physicalObjects.append(theship)
 
@@ -123,11 +123,28 @@ while running:
 	for o in physicalObjects[:]:
 		if o.networkID == None:
 			network.sendIntData( conn, Message.NEWOBJ )
-			lastNetworkID = lastNetworkID + 1
+			lastNetworkID = lastNetworkID + 2
 			o.networkID = lastNetworkID
 			network.sendData( conn, struct.pack( "ii", o.typ, o.networkID ) )
 
 		network.sendIntData( conn, Message.OBJSYNC )
 		network.sendData( conn, struct.pack( "iffff", o.networkID, o.getX(), o.getY(), o.getVX(), o.getVY() ) )
+
+	message = network.receiveIntData( conn, True )
+	while message != None:
+		elif message == Message.NEWOBJ:
+			typ, netid = struct.unpack( "ii", network.receiveData( conn ) )
+			obj = None
+			elif typ == Type.TURRET:
+				obj = turret.Turret((0,0), level)
+			physicalObjects[ netid ] = obj
+		elif message == Message.OBJSYNC:
+			netid, x, y, vx, vy = struct.unpack( "iffff", network.receiveData( conn ) )
+			obj = physicalObjects[ netid ]
+			obj.setX( x )
+			obj.setY( y )
+			obj.v_x, obj.v_y = (vx, vy)
+
+		message = network.receiveIntData( conn, True )
 
 conn.close()

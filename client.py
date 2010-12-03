@@ -49,6 +49,7 @@ leveldata = pickle.loads( packed )
 level = level.Level( leveldata )
 theship = None
 
+lastNetworkID = 1 # client uses odd ids
 physicalObjects = {}
 
 scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
@@ -63,9 +64,12 @@ while running:
 			running = False
 		elif event.type == pygame.KEYDOWN and event.dict["key"]==32:
 			obj = turret.Turret((theship.r_x,theship.r_y - 400),level)
-			from random import choice
-			#this is really a terrible idea...
-			physicalObjects[choice(range(99999))] = obj
+			lastNetworkID = lastNetworkID + 2
+			physicalObjects[lastNetworkID] = obj
+			network.sendIntData( conn, Message.NEWOBJ )
+			network.sendData( conn, struct.pack( "ii", Type.TURRET, lastNetworkID ) )
+			network.sendIntData( conn, Message.OBJSYNC )
+			network.sendData( conn, struct.pack( "iffff", lastNetworkID, obj.getX(), obj.getY(), obj.getVX(), obj.getVY() ) )
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
