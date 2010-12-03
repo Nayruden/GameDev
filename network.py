@@ -11,6 +11,8 @@ class Type:
 	SHIP = 1
 	BULLET = 2
 	TURRET = 3
+	TBULLET = 4
+	SBULLET = 5
 
 def sendData( conn, data ):
 	size = struct.pack( "I", len( data ) )

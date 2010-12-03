@@ -15,6 +15,27 @@ from pygame.rect import Rect
 import play_sound
 from pygame import mixer
 from pygame.mixer import Sound
+#from pygame import font
+
+# ready the display
+screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+pygame.display.set_caption("Tyrian Defense SERVER")
+
+# load introscreen
+introscreen = pygame.image.load('images/pyrian.png')
+screen.blit(introscreen, introscreen.get_rect())
+
+# Display some text
+pygame.font.init()
+arial = pygame.font.match_font('doesNotExist,Arial')
+font = pygame.font.Font(arial, 36)
+text = font.render("Waiting for client", 1, (10, 10, 10))
+textpos = text.get_rect()
+textpos.centerx = screen.get_rect().centerx
+screen.blit(text, textpos)
+
+
+pygame.display.flip()
 
 s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
 s.bind( ('', constants.PORT) )
@@ -22,9 +43,6 @@ s.listen( 1 )
 conn, addr = s.accept()
 print 'Connection from', addr
 
-
-screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)) #336, 432))
-pygame.display.set_caption("Tyrian Defense SERVER")
 clock = pygame.time.Clock()
 
 level = level.Level()
