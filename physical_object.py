@@ -10,12 +10,21 @@ COLLISION_TYPE_GROUND = 1
 COLLISION_TYPE_BULLET = 2
 COLLISION_TYPE_SHIP = 3
 
+NO_OBJECT_ID = -1
+INITIAL_OBJECT_ID = NO_OBJECT_ID + 1
+
 class PhysicalObject(pygame.sprite.Sprite):
 	"""This class represents a generic physical object"""
 
+	# class variable
+	nextObjectID = INITIAL_OBJECT_ID
+
+	# instance variables
 	childObjects = []  # temporary storage for physical objects created by this object (such as bullets)
 	networkID = None
 
+	# more instance variables
+	objectID = NO_OBJECT_ID
 	area = pygame.rect.Rect(0, 0, 0, 0)
 	rect = pygame.rect.Rect(0, 0, 0, 0)
 	physicsRect = pygame.rect.Rect(0, 0, 0, 0)
@@ -36,6 +45,9 @@ class PhysicalObject(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.setX(position[0])
 		self.setY(position[1])
+		self.objectID = PhysicalObject.nextObjectID
+		PhysicalObject.nextObjectID += 1
+		#print "Constructing object with object ID ", self.objectID
 
 
 	def step(self, scrollPosition):
