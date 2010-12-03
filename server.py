@@ -8,6 +8,7 @@ import turret
 import constants
 import network
 from network import Message
+from network import Type
 import struct
 
 from pygame.rect import Rect
@@ -131,16 +132,18 @@ while running:
 		network.sendData( conn, struct.pack( "iffff", o.networkID, o.getX(), o.getY(), o.getVX(), o.getVY() ) )
 
 	message = network.receiveIntData( conn, True )
+	obj = None
 	while message != None:
-		elif message == Message.NEWOBJ:
+		message, = message
+		if message == Message.NEWOBJ:
 			typ, netid = struct.unpack( "ii", network.receiveData( conn ) )
-			obj = None
-			elif typ == Type.TURRET:
+			if typ == Type.TURRET:
 				obj = turret.Turret((0,0), level)
-			physicalObjects[ netid ] = obj
+			obj.networkID = netid
+			physicalObjects.append(obj)
 		elif message == Message.OBJSYNC:
 			netid, x, y, vx, vy = struct.unpack( "iffff", network.receiveData( conn ) )
-			obj = physicalObjects[ netid ]
+			#obj = physicalObjects[ netid ]
 			obj.setX( x )
 			obj.setY( y )
 			obj.v_x, obj.v_y = (vx, vy)
