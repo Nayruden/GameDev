@@ -53,7 +53,7 @@ class Turret(PhysicalObject):
 			soundEfx = pygame.mixer.Sound(constants.TURRET_BULLET_SFX)
 			soundEfx.set_volume(0.5)
 			play_sound.PlaySounds(soundEfx)
-			theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)))  # gets bullet far enough from ship
+			theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")  # gets bullet far enough from ship
 			# the following two lines are for classic arcade physics
 			theBullet.v_x = 0
 			theBullet.v_y = bullet.DEFAULT_SPEED

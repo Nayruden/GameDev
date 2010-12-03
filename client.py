@@ -19,11 +19,29 @@ from pygame.rect import Rect
 from pygame import mixer
 from pygame.mixer import Sound
 
+screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+pygame.display.set_caption("Tyrian Defense CLIENT")
+
+introscreen = pygame.image.load('images/pyrian.png')
+screen.blit(introscreen, introscreen.get_rect())
+
+# Display some text
+pygame.font.init()
+arial = pygame.font.match_font('doesNotExist,Arial')
+font = pygame.font.Font(arial, 36)
+text = font.render("Press any key to start", 1, (10, 10, 10))
+textpos = text.get_rect()
+textpos.centerx = screen.get_rect().centerx
+screen.blit(text, textpos)
+
+pygame.display.flip()
+
+# Wait for a key to be pressed
+while (pygame.event.wait().type != pygame.KEYDOWN): pass
+
 conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 conn.connect((sys.argv[-1], constants.PORT))
 
-screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)) #336, 432))
-pygame.display.set_caption("Tyrian Defense CLIENT")
 clock = pygame.time.Clock()
 
 packed = network.receiveData( conn )
@@ -77,8 +95,10 @@ while running:
 				obj = theship = ship.Ship((0,0), level)
 			elif typ == Type.TURRET:
 				obj = turret.Turret((0,0), level)
-			elif typ == Type.BULLET:
-				obj = bullet.Bullet((0,0))
+			elif typ == Type.TBULLET:
+				obj = bullet.Bullet((0,0), "tur")
+			elif typ == Type.SBULLET:
+				obj = bullet.Bullet((0,0), "shp")
 			physicalObjects[ netid ] = obj
 		elif message == Message.OBJSYNC:
 			netid, x, y, vx, vy = struct.unpack( "iffff", network.receiveData( conn ) )
