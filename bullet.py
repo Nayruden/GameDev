@@ -47,6 +47,6 @@ class Bullet(PhysicalObject):
 
 
 	def resolveCollisionWith(self, otherObject):
-		if otherObject.collisionType != physical_object.COLLISION_TYPE_BULLET:
+		if otherObject.collisionType != physical_object.COLLISION_TYPE_BULLET and otherObject.controllingPlayer != self.controllingPlayer:
 			self.destroyed = True
 

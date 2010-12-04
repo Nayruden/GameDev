@@ -73,8 +73,8 @@ class Level(object):
 			for o2 in self.physicalObjects:
 				if o1 != o2:
 					if o1.physicsRect.colliderect(o2.physicsRect):
-						o1.resolveCollisionWith(o2)  # resolve collision by
-						o2.resolveCollisionWith(o1)  #  destroying objects
+						o1.resolveCollisionWith(o2)
+						o2.resolveCollisionWith(o1)
 		for o in self.physicalObjects[:]:  # add any new objects to the universe
 			while len(o.childObjects) != 0:
 				self.physicalObjects.append(o.childObjects.pop(0))

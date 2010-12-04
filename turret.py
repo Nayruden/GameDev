@@ -6,6 +6,8 @@ import physical_object
 from physical_object import PhysicalObject
 import bullet
 
+import math
+
 from pygame.rect import Rect
 import play_sound
 from pygame import mixer
@@ -26,6 +28,7 @@ class Turret(PhysicalObject):
 
 		PhysicalObject.__init__(self, position)
 
+		self.level = level
 		self.controllingPlayer = physical_object.OWNER_DEFENDER
 
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, TURRET_WIDTH, TURRET_HEIGHT)
@@ -58,14 +61,19 @@ class Turret(PhysicalObject):
 			soundEfx.set_volume(0.5)
 			play_sound.PlaySounds(soundEfx)
 			theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")  # gets bullet far enough from ship
-			# the following two lines are for classic arcade physics
-			theBullet.v_x = 0
-			theBullet.v_y = bullet.DEFAULT_SPEED
-			# the following two lines are for more real-world-type phsyics
-			#theBullet.v_x = self.v_x
-			#theBullet.v_y = self.v_y - bullet.DEFAULT_SPEED
-			self.childObjects.append(theBullet)
-			self.timeUntilWeaponCanFireAgain = GUN_COOLDOWN_TIME
+			for o in self.level.physicalObjects:
+				if o.controllingPlayer == physical_object.OWNER_ATTACKER:
+					# it's the ship! get it!
+					deltaX = o.r_x - self.r_x
+					deltaY = o.r_y - self.r_y
+					distance = math.hypot(deltaX, deltaY)
+					# fun fact: the way the stepping works, the bullet collides with the turret only when
+					#  the bullet is not traveling parallel to the X or Y axes
+					theBullet.controllingPlayer = self.controllingPlayer
+					theBullet.v_x = bullet.DEFAULT_SPEED*(deltaX/distance)  # v_x = speed*cos
+					theBullet.v_y = bullet.DEFAULT_SPEED*(deltaY/distance)  # v_y = speed*sin
+					self.childObjects.append(theBullet)
+					self.timeUntilWeaponCanFireAgain = GUN_COOLDOWN_TIME
 	
 	
 
