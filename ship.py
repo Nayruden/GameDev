@@ -2,6 +2,7 @@
 import pygame
 import constants
 from network import Type
+import physical_object
 from physical_object import PhysicalObject
 import bullet
 
@@ -29,6 +30,8 @@ class Ship(PhysicalObject):
 		PhysicalObject.__init__(self, position)
 		self.level = level
 
+		self.controllingPlayer = physical_object.OWNER_ATTACKER
+
 		self.image = pygame.image.load('images/ship.png')
 		self.rect = self.image.get_rect()
 
@@ -45,6 +48,8 @@ class Ship(PhysicalObject):
 		self.boundsRect = Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT)
 
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, SHIP_WIDTH, SHIP_HEIGHT)
+
+		print 'ship owner =   ', self.controllingPlayer
 
 
 	def step(self, scrollPosition):

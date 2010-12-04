@@ -10,6 +10,10 @@ COLLISION_TYPE_GROUND = 1
 COLLISION_TYPE_BULLET = 2
 COLLISION_TYPE_SHIP = 3
 
+OWNER_NONE = 0
+OWNER_ATTACKER = OWNER_NONE + 1
+OWNER_DEFENDER = OWNER_ATTACKER + 1
+
 NO_OBJECT_ID = -1
 INITIAL_OBJECT_ID = NO_OBJECT_ID + 1
 
@@ -22,6 +26,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 	# instance variables
 	childObjects = []  # temporary storage for physical objects created by this object (such as bullets)
 	networkID = None
+	controllingPlayer = OWNER_NONE
 
 	# more instance variables
 	objectID = NO_OBJECT_ID

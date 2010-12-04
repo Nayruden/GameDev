@@ -2,6 +2,7 @@
 import pygame
 import constants
 from network import Type
+import physical_object
 from physical_object import PhysicalObject
 import bullet
 
@@ -25,6 +26,8 @@ class Turret(PhysicalObject):
 
 		PhysicalObject.__init__(self, position)
 
+		self.controllingPlayer = physical_object.OWNER_DEFENDER
+
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, TURRET_WIDTH, TURRET_HEIGHT)
 
 		self.image = pygame.image.load('images/defenses.png')
@@ -37,6 +40,7 @@ class Turret(PhysicalObject):
 		self.action = "all"
 		self.area = pygame.rect.Rect(self.actions[self.action])
 		#print 'turret (x,y) = ', (self.r_x, self.r_y)
+		print 'turret owner = ', self.controllingPlayer
 
 
 	def step(self, scrollPosition):
