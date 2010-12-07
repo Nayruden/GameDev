@@ -48,6 +48,7 @@ class Ship(PhysicalObject):
 		self.boundsRect = Rect(level.rect.x,level.rect.y,level.rect.width,constants.SCREEN_HEIGHT)
 
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, SHIP_WIDTH, SHIP_HEIGHT)
+		self.targetType = physical_object.TARGET_TYPE_SHIP
 
 		print 'ship owner =   ', self.controllingPlayer
 

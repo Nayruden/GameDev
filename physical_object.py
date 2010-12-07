@@ -10,6 +10,9 @@ COLLISION_TYPE_GROUND = 1
 COLLISION_TYPE_BULLET = 2
 COLLISION_TYPE_SHIP = 3
 
+TARGET_TYPE_UNDEF = 0
+TARGET_TYPE_SHIP = 1
+
 OWNER_NONE = 0
 OWNER_ATTACKER = OWNER_NONE + 1
 OWNER_DEFENDER = OWNER_ATTACKER + 1
@@ -34,6 +37,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 	rect = pygame.rect.Rect(0, 0, 0, 0)
 	physicsRect = pygame.rect.Rect(0, 0, 0, 0)
 	collisionType = COLLISION_TYPE_UNDEF
+	targetType = TARGET_TYPE_UNDEF
 	destroyed = False
 	r_x = 0.0  # location x; I didn't want to use something as generic as "x" and "y", so I pulled from physics/engineering convention
 	r_y = 0.0  # location y

@@ -56,14 +56,16 @@ class Turret(PhysicalObject):
 		if self.timeUntilWeaponCanFireAgain > 0:
 			self.timeUntilWeaponCanFireAgain -= 1
 				
-		if self.timeUntilWeaponCanFireAgain <= 0 and self.physicsRect.colliderect(self.boundsRect):
-			soundEfx = pygame.mixer.Sound(constants.TURRET_BULLET_SFX)
-			soundEfx.set_volume(0.5)
-			play_sound.PlaySounds(soundEfx)
-			theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")  # gets bullet far enough from ship
+		if self.physicsRect.colliderect(self.boundsRect):
 			for o in self.level.physicalObjects:
-				if o.controllingPlayer == physical_object.OWNER_ATTACKER:
+				if(o.controllingPlayer == physical_object.OWNER_ATTACKER and
+				o.targetType == physical_object.TARGET_TYPE_SHIP and
+				self.timeUntilWeaponCanFireAgain <= 0):
 					# it's the ship! get it!
+					soundEfx = pygame.mixer.Sound(constants.TURRET_BULLET_SFX)
+					soundEfx.set_volume(0.5)
+					play_sound.PlaySounds(soundEfx)
+					theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")
 					deltaX = o.r_x - self.r_x
 					deltaY = o.r_y - self.r_y
 					distance = math.hypot(deltaX, deltaY)
