@@ -50,7 +50,7 @@ class Ship(PhysicalObject):
 		self.physicsRect = pygame.rect.Rect(self.r_x, self.r_y, SHIP_WIDTH, SHIP_HEIGHT)
 		self.targetType = physical_object.TARGET_TYPE_SHIP
 
-		print 'ship owner =   ', self.controllingPlayer
+		#print 'ship owner =   ', self.controllingPlayer
 
 
 	def step(self, scrollPosition):

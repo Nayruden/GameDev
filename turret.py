@@ -43,7 +43,7 @@ class Turret(PhysicalObject):
 		self.action = "all"
 		self.area = pygame.rect.Rect(self.actions[self.action])
 		#print 'turret (x,y) = ', (self.r_x, self.r_y)
-		print 'turret owner = ', self.controllingPlayer
+		#print 'turret owner = ', self.controllingPlayer
 
 
 	def step(self, scrollPosition):
