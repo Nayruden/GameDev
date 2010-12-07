@@ -6,9 +6,12 @@ import constants
 
 
 class PlaySounds:	
-	pygame.mixer.init(44100,-16,16, 1024) #initialize mixer
+	pygame.mixer.init(44100,-16,300, 1024) #initialize mixer
 	def __init__(self, sound):		
-		openChannel = pygame.mixer.find_channel()	#find open channel		
-		openChannel.play(sound) #play sound on open channel
+		openChannel = pygame.mixer.find_channel()	#find open channel
+		if openChannel:
+			openChannel.play(sound) #play sound on open channel
+		else:
+			print "BUG: No open channel."
 		
 	
