@@ -61,6 +61,7 @@ leveldata = pickle.loads( packed )
 level = level.Level( leveldata )
 theship = None
 
+lastNetworkID = 1 # client uses odd ids
 physicalObjects = {}
 
 scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
@@ -88,9 +89,13 @@ while running:
 			obj = turret.Turret((-movedlevelrect.x+pos[0],-movedlevelrect.y+pos[1]),level)
 			print pos
 			print movedlevelrect
-			lastID += 2 # stick to odd numbers
-			physicalObjects[lastID] = obj
 			turretPlacementClock = PLACEMENT_COOLDOWN_TIME
+			lastNetworkID = lastNetworkID + 2
+			physicalObjects[lastNetworkID] = obj
+			network.sendIntData( conn, Message.NEWOBJ )
+			network.sendData( conn, struct.pack( "ii", Type.TURRET, lastNetworkID ) )
+			network.sendIntData( conn, Message.OBJSYNC )
+			network.sendData( conn, struct.pack( "iffff", lastNetworkID, obj.getX(), obj.getY(), obj.getVX(), obj.getVY() ) )
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
