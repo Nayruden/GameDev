@@ -113,7 +113,7 @@ while running:
 	for o in level.physicalObjects[:]:
 		if o.networkID == None:
 			network.sendIntData( conn, Message.NEWOBJ )
-			lastNetworkID = lastNetworkID + 1
+			lastNetworkID = lastNetworkID + 2 # stick to even numbers
 			o.networkID = lastNetworkID
 			network.sendData( conn, struct.pack( "ii", o.typ, o.networkID ) )
 

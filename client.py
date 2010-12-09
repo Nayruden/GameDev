@@ -56,19 +56,27 @@ scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
 
+PLACEMENT_COOLDOWN_TIME = 120 # may be too high
+turretPlacementClock = 0
+
+lastID = 1 # Client will assign odd-numbered netids
+
 while running:
+
+	if turretPlacementClock > 0:
+		turretPlacementClock -= 1
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-		elif event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+		elif event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] and turretPlacementClock == 0:
 			pos = pygame.mouse.get_pos()
 			obj = turret.Turret((-movedlevelrect.x+pos[0],-movedlevelrect.y+pos[1]),level)
 			print pos
 			print movedlevelrect
-			from random import choice
-			#this is really a terrible idea...
-			physicalObjects[choice(range(99999))] = obj
+			lastID += 2 # stick to odd numbers
+			physicalObjects[lastID] = obj
+			turretPlacementClock = PLACEMENT_COOLDOWN_TIME
 
 	screen.fill(pygame.Color('black'))
 	movedlevelrect.y = -scrollPosition;
