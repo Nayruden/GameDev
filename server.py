@@ -16,7 +16,16 @@ from pygame.rect import Rect
 import play_sound
 from pygame import mixer
 from pygame.mixer import Sound
+
 #from pygame import font
+
+#initialize sound objects and set their volumes
+startSFX = pygame.mixer.Sound(constants.START_MUSIC)
+startSFX.set_volume(0.7)
+endSFX = pygame.mixer.Sound(constants.END_MUSIC)
+endSFX.set_volume(0.7)
+backgroundSFX = pygame.mixer.Sound(constants.BACKGROUND_MUSIC)
+backgroundSFX.set_volume(0.5)
 
 # ready the display
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
@@ -24,6 +33,7 @@ pygame.display.set_caption("Tyrian Defense SERVER")
 
 # load introscreen
 introscreen = pygame.image.load('images/pyrian.png')
+play_sound.PlaySounds(startSFX, 0)
 screen.blit(introscreen, introscreen.get_rect())
 
 # Display some text
@@ -68,21 +78,19 @@ movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
 
 # create the background music and send it to the class to play the sounds
-sounds = pygame.mixer.Sound(constants.BACKGROUND_MUSIC)
-sounds.set_volume(0.5)
-play_sound.PlaySounds(sounds)
+#pygame.time.wait(310)
+play_sound.PlaySounds(backgroundSFX, 1)
 
-
-while running:
+while running:			
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
 
 	if not theship.handle_event(event):
-		pass #todo: handle events the ship isn't interested in
-
+		pass #todo: handle events the ship isn't interested in	
+	
 	level.step(scrollPosition)
-
+	
 	# do some network stuff
 	for o in level.physicalObjectsExternalRemoveList:
 		removeQueue.append(o.networkID)
@@ -101,12 +109,11 @@ while running:
 		pygame.display.flip()
 		clock.tick(60)
 		scrollPosition -= constants.SCROLL_RATE
-	else:
+	else:				
 		winscreen = pygame.image.load('images/win.png')
 		screen.blit(winscreen, winscreen.get_rect())
-		pygame.display.flip()
-
-
+		pygame.display.flip()		
+	
 	#Network:
 	network.sendIntData( conn, Message.SCROLLSYNC )
 	network.sendIntData( conn, scrollPosition )
@@ -125,5 +132,4 @@ while running:
 
 		network.sendIntData( conn, Message.OBJSYNC )
 		network.sendData( conn, struct.pack( "iffff", o.networkID, o.getX(), o.getY(), o.getVX(), o.getVY() ) )
-
 conn.close()

@@ -64,7 +64,7 @@ class Turret(PhysicalObject):
 					# it's the ship! get it!
 					soundEfx = pygame.mixer.Sound(constants.TURRET_BULLET_SFX)
 					soundEfx.set_volume(0.5)
-					play_sound.PlaySounds(soundEfx)
+					play_sound.PlaySounds(soundEfx, 2)
 					theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")
 					deltaX = o.r_x - self.r_x
 					deltaY = o.r_y - self.r_y

@@ -139,7 +139,7 @@ class Ship(PhysicalObject):
 			if self.timeUntilWeaponCanFireAgain <= 0:
 				soundEfx = pygame.mixer.Sound(constants.BULLET_SFX)
 				soundEfx.set_volume(0.7)
-				play_sound.PlaySounds(soundEfx)
+				play_sound.PlaySounds(soundEfx, 2)
 				theBullet = bullet.Bullet((self.rect.x + SHIP_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y - (bullet.BULLET_HEIGHT + 6)), "shp")  # gets bullet far enough from ship
 				theBullet.controllingPlayer = self.controllingPlayer
 				theBullet.typ = Type.SBULLET

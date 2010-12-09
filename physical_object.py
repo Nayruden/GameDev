@@ -88,7 +88,7 @@ class PhysicalObject(pygame.sprite.Sprite):
 			self.destroyed = True
 			explode = pygame.mixer.Sound(constants.EXPLOSION_SFX)
 			explode.set_volume(0.4)
-			play_sound.PlaySounds(explode)
+			play_sound.PlaySounds(explode, 2)
 
 
 	def getX(self):
