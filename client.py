@@ -61,8 +61,11 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-		elif event.type == pygame.KEYDOWN and event.dict["key"]==32:
-			obj = turret.Turret((theship.r_x,theship.r_y - 400),level)
+		elif event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+			pos = pygame.mouse.get_pos()
+			obj = turret.Turret((-movedlevelrect.x+pos[0],-movedlevelrect.y+pos[1]),level)
+			print pos
+			print movedlevelrect
 			from random import choice
 			#this is really a terrible idea...
 			physicalObjects[choice(range(99999))] = obj
