@@ -94,12 +94,16 @@ while running:
 		#screen.fill((255, 0, 0), Rect((o.physicsRect.x, o.physicsRect.y - scrollPosition), (o.physicsRect.width, o.physicsRect.height)))
 		screen.blit(o.image, Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)), o.area)
 
-	pygame.display.flip()
-	clock.tick(60)
+	#if not at the end of the level, update the display and scroll the level down
+	if scrollPosition != 0:
+		pygame.display.flip()
+		clock.tick(60)
+		scrollPosition -= constants.SCROLL_RATE
+	else:
+		winscreen = pygame.image.load('images/win.png')
+		screen.blit(winscreen, winscreen.get_rect())
+		pygame.display.flip()
 
-	#scroll the level down
-	scrollPosition -= constants.SCROLL_RATE
-	#movedlevelrect = movedlevelrect.move(0,SCROLL_RATE)
 
 	#Network:
 	network.sendIntData( conn, Message.SCROLLSYNC )

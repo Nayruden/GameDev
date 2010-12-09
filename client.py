@@ -78,10 +78,18 @@ while running:
 		o.step(scrollPosition)
 		screen.blit(o.image, Rect((o.rect.x, o.rect.y - scrollPosition),(o.rect.width, o.rect.height)), o.area)
 
-	pygame.display.flip()
-	clock.tick(60)
 
-	scrollPosition -= constants.SCROLL_RATE
+
+	#if not at the end of the level, update the display and scroll the level down
+	if scrollPosition != 0:
+		pygame.display.flip()
+		clock.tick(60)
+		scrollPosition -= constants.SCROLL_RATE
+	else:
+		losescreen = pygame.image.load('images/lose.png')
+		screen.blit(losescreen, losescreen.get_rect())
+		pygame.display.flip()
+		
 
 	#Network:
 	message = network.receiveIntData( conn, True )
