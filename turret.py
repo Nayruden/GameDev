@@ -66,14 +66,17 @@ class Turret(PhysicalObject):
 					soundEfx.set_volume(0.5)
 					play_sound.PlaySounds(soundEfx)
 					theBullet = bullet.Bullet((self.rect.x + TURRET_WIDTH/2 - bullet.BULLET_WIDTH/2, self.rect.y + (bullet.BULLET_HEIGHT + 6)), "tur")
+					theBullet.controllingPlayer = self.controllingPlayer
+					# old velocity code
 					deltaX = o.r_x - self.r_x
 					deltaY = o.r_y - self.r_y
 					distance = math.hypot(deltaX, deltaY)
-					# fun fact: the way the stepping works, the bullet collides with the turret only when
-					#  the bullet is not traveling parallel to the X or Y axes
-					theBullet.controllingPlayer = self.controllingPlayer
 					theBullet.v_x = bullet.DEFAULT_SPEED*(deltaX/distance)  # v_x = speed*cos
 					theBullet.v_y = bullet.DEFAULT_SPEED*(deltaY/distance)  # v_y = speed*sin
+					# new velocity code; apparently tries to divide by zero and take the square root of a negative number
+					#timeToImpact = ((o.r_x*o.v_x + o.r_y*o.v_y + math.sqrt(-pow(o.r_y,2)*(-1 + pow(o.v_x, 2)) + o.r_x*(o.r_x + 2*o.r_y*o.v_x*o.v_y - o.r_x*pow(o.v_y, 2))))/(-1 + pow(o.v_x, 2) + pow(o.v_y, 2)))
+					#theBullet.v_x = (o.r_x + timeToImpact*o.v_x)/timeToImpact
+					#theBullet.v_y = (o.r_y + timeToImpact*o.v_y)/timeToImpact
 					self.childObjects.append(theBullet)
 					self.timeUntilWeaponCanFireAgain = GUN_COOLDOWN_TIME
 	
