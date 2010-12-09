@@ -21,12 +21,12 @@ from pygame.mixer import Sound
 
 # used if game is on mulitple machines...if on the same machine,
 # the two programs' sounds will overlap and not sound good
-#startSFX = pygame.mixer.Sound(constants.START_MUSIC)
-#startSFX.set_volume(0.7)
-#endSFX = pygame.mixer.Sound(constants.END_MUSIC)
-#endSFX.set_volume(0.7)
-#backgroundSFX = pygame.mixer.Sound(constants.BACKGROUND_MUSIC)
-#backgroundSFX.set_volume(0.5)
+startSFX = pygame.mixer.Sound(constants.START_MUSIC)
+startSFX.set_volume(0.7)
+endSFX = pygame.mixer.Sound(constants.END_MUSIC)
+endSFX.set_volume(0.7)
+backgroundSFX = pygame.mixer.Sound(constants.BACKGROUND_MUSIC)
+backgroundSFX.set_volume(0.5)
 
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Tyrian Defense CLIENT")
@@ -34,7 +34,7 @@ pygame.display.set_caption("Tyrian Defense CLIENT")
 introscreen = pygame.image.load('images/pyrian.png')
 pygame.time.wait(15)
 # another for multiple machines
-#play_sound.PlaySounds(startSFX, 0)
+play_sound.PlaySounds(startSFX, 0)
 screen.blit(introscreen, introscreen.get_rect())
 
 # Display some text
@@ -74,7 +74,7 @@ turretPlacementClock = 0
 
 lastID = 1 # Client will assign odd-numbered netids
 # for two machines
-#play_sound.PlaySounds(backgroundSFX, 1)
+play_sound.PlaySounds(backgroundSFX, 1)
 
 while running:
 
