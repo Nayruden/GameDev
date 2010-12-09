@@ -93,7 +93,6 @@ class Turret(PhysicalObject):
 					#theBullet.v_x = (o.r_x + timeToImpact*o.v_x)/timeToImpact
 					#theBullet.v_y = (o.r_y + timeToImpact*o.v_y)/timeToImpact
 					# new velocity code, mk. II
-<<<<<<< HEAD
 					futurepos = (target.r_x, target.r_y)  # Guess that where they'll be in the future is where they are now
 					MY_SPEED = 1.5 + constants.SCROLL_RATE
 					for i in range(0, 4):
@@ -106,22 +105,6 @@ class Turret(PhysicalObject):
 						dirNotNormalized[1]/math.hypot(dirNotNormalized[0], dirNotNormalized[1])))
 					theBullet.v_x = MY_SPEED*dirNormalized[0]
 					theBullet.v_y = MY_SPEED*dirNormalized[1]
-					# end of velocity code
-=======
-					futurepos = (o.r_x, o.r_y)  # Guess that where they'll be in the future is where they are now
-					MY_SPEED = 1.5 + constants.SCROLL_RATE
-					for i in range(0, 4):
-						dist = (futurepos[0] - self.r_x, futurepos[1] - self.r_y)
-						timetotarget = math.hypot(dist[0], dist[1]) / MY_SPEED
-						distcovered = (o.v_x*timetotarget, o.v_y*timetotarget)
-						futurepos = (o.r_x + distcovered[0], o.r_y + distcovered[1])
-					dirNotNormalized = (futurepos[0] - self.r_x, futurepos[1] - self.r_y)
-					dirNormalized = ((dirNotNormalized[0]/math.hypot(dirNotNormalized[0], dirNotNormalized[1]),
-						dirNotNormalized[1]/math.hypot(dirNotNormalized[0], dirNotNormalized[1])))
-					
-					theBullet.v_x = MY_SPEED*dirNormalized[0]
-					theBullet.v_y = MY_SPEED*dirNormalized[1]
->>>>>>> 467768f68157cb66186291dd460962d128e885c3
 					# end of velocity code
 					self.childObjects.append(theBullet)
 					self.timeLeftToCharge = GUN_CHARGEUP_TIME
