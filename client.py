@@ -69,7 +69,7 @@ scrollPosition = level.rect.height - constants.SCREEN_HEIGHT
 movedlevelrect = level.rect.move(0,-level.yoffset)
 running = True
 
-PLACEMENT_COOLDOWN_TIME = 120 # may be too high
+PLACEMENT_COOLDOWN_TIME = 90 # may be too high
 turretPlacementClock = 0
 
 lastID = 1 # Client will assign odd-numbered netids
