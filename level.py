@@ -63,7 +63,7 @@ class Level(object):
 
 
 	def step(self, scrollPosition):
-		self.physicalObjectsExternalRemoveList[:] = []  # empty the list of objects desstroyed in the last step
+		self.physicalObjectsExternalRemoveList[:] = []  # empty the list of objects destroyed in the last step
 		for o in self.physicalObjects[:]:  # update all physical objects
 			o.step(scrollPosition)  # update the object
 			if(o.destroyed):

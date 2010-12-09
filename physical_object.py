@@ -18,13 +18,24 @@ OWNER_ATTACKER = OWNER_NONE + 1
 OWNER_DEFENDER = OWNER_ATTACKER + 1
 
 NO_OBJECT_ID = -1
-INITIAL_OBJECT_ID = NO_OBJECT_ID + 1
+INITIAL_OBJECT_ID_INDEX = 0
+
+
+# note: it's not necessary for the client to call this function, though it
+#  would be nice
+def init(initializingOnServer):
+	PhysicalObject.isOnServer = initializingOnServer
+	#if PhysicalObject.isOnServer:
+	#	print "PhysicalObjects are now being constructed for the server."
+	#else:
+	#	print "PhysicalObjects are now being constructed for the client."
 
 class PhysicalObject(pygame.sprite.Sprite):
 	"""This class represents a generic physical object"""
 
-	# class variable
-	nextObjectID = INITIAL_OBJECT_ID
+	# class variables
+	isOnServer = False
+	nextObjectIDIndex = INITIAL_OBJECT_ID_INDEX
 
 	# instance variables
 	childObjects = []  # temporary storage for physical objects created by this object (such as bullets)
@@ -54,8 +65,13 @@ class PhysicalObject(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.setX(position[0])
 		self.setY(position[1])
-		self.objectID = PhysicalObject.nextObjectID
-		PhysicalObject.nextObjectID += 1
+		if PhysicalObject.isOnServer:
+			#print "On server"
+			self.objectID = 2*PhysicalObject.nextObjectIDIndex      # even IDs
+		else:
+			#print "On client"
+			self.objectID = 2*PhysicalObject.nextObjectIDIndex + 1  # odd IDs
+		PhysicalObject.nextObjectIDIndex += 1
 		#print "Constructing object with object ID ", self.objectID
 
 
